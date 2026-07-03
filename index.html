@@ -3,21 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Weather Monitor</title>
+    <title>Advanced Weather & Ballistics Monitor</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background: #f4f6f9; color: #333; }
-        .dashboard { display: flex; gap: 20px; max-width: 800px; flex-wrap: wrap; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); min-width: 200px; flex: 1; text-align: center; }
-        .label { font-size: 0.85rem; color: #666; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px; }
-        .value { font-size: 2rem; font-weight: bold; color: #007bff; }
+        h2 { color: #222; border-bottom: 2px solid #ddd; padding-bottom: 8px; }
+        h3 { margin-top: 30px; color: #444; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
+        .dashboard { display: flex; gap: 15px; max-width: 1000px; flex-wrap: wrap; margin-bottom: 20px; }
+        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.04); min-width: 200px; flex: 1; text-align: center; }
+        .card.highlight { border-top: 4px solid #007bff; }
+        .card.hp-card { border-top: 4px solid #28a745; }
+        .label { font-size: 0.8rem; color: #666; text-transform: uppercase; margin-bottom: 5px; font-weight: 6px; }
+        .value { font-size: 1.6rem; font-weight: bold; color: #222; }
         .status { font-weight: bold; margin-bottom: 20px; color: #28a745; font-size: 0.95rem; }
     </style>
 </head>
 <body>
 
-    <h2>Weather Station Monitor (API Key Mode)</h2>
-    <div id="status" class="status">Status: Connecting...</div>
+    <h2>Weather Station & Air Density Monitor</h2>
+    <div id="status" class="status">Status: Connecting to ThingsBoard...</div>
 
+    <h3>Sensor Telemetry</h3>
     <div class="dashboard">
         <div class="card">
             <div class="label">Temperature</div>
@@ -33,21 +38,52 @@
         </div>
     </div>
 
+    <h3>Calculated Air Metrics</h3>
+    <div class="dashboard">
+        <div class="card highlight">
+            <div class="label">Density Altitude</div>
+            <div id="da-val" class="value">-- ft</div>
+        </div>
+        <div class="card highlight">
+            <div class="label">Air Density</div>
+            <div id="ad-val" class="value">-- lb/ft³</div>
+        </div>
+        <div class="card highlight">
+            <div class="label">Water Grains</div>
+            <div id="wg-val" class="value">-- gr/lb</div>
+        </div>
+        <div class="card highlight">
+            <div class="label">Dew Point</div>
+            <div id="dp-val" class="value">-- °F</div>
+        </div>
+    </div>
+
+    <h3>HP Correction Factors</h3>
+    <div class="dashboard">
+        <div class="card hp-card">
+            <div class="label">SAE J1349 (Modern/Net)</div>
+            <div id="sae-modern-val" class="value">--</div>
+        </div>
+        <div class="card hp-card">
+            <div class="label">SAE J607 / STD (Classic)</div>
+            <div id="sae-classic-val" class="value">--</div>
+        </div>
+        <div class="card hp-card">
+            <div class="label">DIN 70020 (European)</div>
+            <div id="din-val" class="value">--</div>
+        </div>
+    </div>
+
     <script>
         // ================= CONFIGURATION =================
         const TB_HOST = "thingsboard.cloud";
-        
-        // 1. Paste the API Key you generated in your account dashboard security settings
         const API_KEY = "tb_JwyKn8FajEZale3SkTV-1a5P9z1R3WjGmeuMzFucGRiQkSPCq9G447mYPbE9aIhRWlI2XL8LQdW1xzGopPKhFg";
-        
-        // 2. Paste your device UUID (from Devices -> Weather Device -> Copy Device ID)
         const DEVICE_ID = "2131e120-7570-11f1-85a3-7f815107dff5"; 
         // =================================================
 
-        const POLL_INTERVAL = 60000; // Poll updates every 3 seconds
+        const POLL_INTERVAL = 3000;
 
         async function fetchLiveTelemetry() {
-            // Using the global REST API Telemetry Controller
             const url = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=avg_temp,bp,sh`;
 
             try {
@@ -55,7 +91,6 @@
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        // ThingsBoard API Keys use the format: ApiKey YOUR_KEY_VALUE
                         'X-Authorization': `ApiKey ${API_KEY}`
                     }
                 });
@@ -64,18 +99,19 @@
                 
                 const data = await response.json();
                 
-                // Extracting your hardware telemetry values from arrays
-                if (data.avg_temp && data.avg_temp.length > 0) {
-                    const temp = parseFloat(data.avg_temp[0].value).toFixed(2);
-                    document.getElementById('temp-val').innerText = `${temp} °F`;
-                }
-                if (data.bp && data.bp.length > 0) {
-                    const pressure = parseFloat(data.bp[0].value).toFixed(2);
-                    document.getElementById('bp-val').innerText = `${pressure} inHg`;
-                }
-                if (data.sh && data.sh.length > 0) {
-                    const humidity = parseFloat(data.sh[0].value).toFixed(1);
-                    document.getElementById('sh-val').innerText = `${humidity} %`;
+                if (data.avg_temp && data.bp && data.sh) {
+                    // Extract baseline metrics
+                    const T_f = parseFloat(data.avg_temp[0].value);
+                    const P_inHg = parseFloat(data.bp[0].value);
+                    const RH = parseFloat(data.sh[0].value);
+
+                    // Update sensor UI
+                    document.getElementById('temp-val').innerText = `${T_f.toFixed(2)} °F`;
+                    document.getElementById('bp-val').innerText = `${P_inHg.toFixed(2)} inHg`;
+                    document.getElementById('sh-val').innerText = `${RH.toFixed(1)} %`;
+
+                    // Run the complex thermodynamic computations
+                    calculateAdvancedMetrics(T_f, P_inHg, RH);
                 }
 
                 document.getElementById('status').innerText = `Status: Streaming data (Last Sync: ${new Date().toLocaleTimeString()})`;
@@ -86,6 +122,70 @@
                 document.getElementById('status').innerText = "Status: Connection Error reading telemetry.";
                 document.getElementById('status').style.color = "#dc3545";
             }
+        }
+
+        function calculateAdvancedMetrics(T_f, P_inHg, RH) {
+            // --- Conversions ---
+            const T_c = (T_f - 32) * 5 / 9;            // F to Celsius
+            const T_k = T_c + 273.15;                 // Celsius to Kelvin
+            const P_mb = P_inHg * 33.8639;            // inHg to millibars (hPa)
+
+            // 1. Dew Point Calculation (Magnus-Tetens Equation)
+            const a = 17.27;
+            const b = 237.7;
+            const alpha = ((a * T_c) / (b + T_c)) + Math.log(RH / 100);
+            const T_dp_c = (b * alpha) / (a - alpha);
+            const T_dp_f = (T_dp_c * 9 / 5) + 32;
+
+            // 2. Vapor Pressure & Water Grains Calculation
+            // Saturation vapor pressure (Es) in mb
+            const Es_mb = 6.112 * Math.exp((17.67 * T_c) / (T_c + 243.5));
+            // Actual vapor pressure (Pv) in mb
+            const Pv_mb = Es_mb * (RH / 100);
+            // Partial pressure of dry air
+            const P_dry_mb = P_mb - Pv_mb;
+            // Grains of water per pound of dry air
+            const waterGrains = 7000 * 0.62198 * (Pv_mb / P_dry_mb);
+
+            // 3. Air Density Calculation (Ideal Gas Law for moist air)
+            const R_dry = 287.058; // J/(kg*K)
+            const R_vapor = 461.495; // J/(kg*K)
+            // Convert pressures from mb to Pascals
+            const P_dry_pa = P_dry_mb * 100;
+            const Pv_pa = Pv_mb * 100;
+            // Density in kg/m³
+            const rho_kg_m3 = (P_dry_pa / (R_dry * T_k)) + (Pv_pa / (R_vapor * T_k));
+            // Convert kg/m³ to lb/ft³ (1 kg/m³ = 0.06242796 lb/ft³)
+            const airDensity_lb_ft3 = rho_kg_m3 * 0.06242796;
+
+            // 4. Density Altitude Calculation
+            // Base Standard Sea Level Air Density is 0.0765 lb/ft³ (or 1.225 kg/m³)
+            const rho_standard = 1.225;
+            const densityAltitude_ft = (1 - Math.pow((rho_kg_m3 / rho_standard), 0.234969)) / 0.000006875585;
+
+            // 5. HP Correction Factors (SAE J1349, SAE J607, DIN 70020)
+            // Convert pressures to standard millimeters of Mercury (mmHg)
+            const P_dry_inHg = P_inHg - (Pv_mb * 0.02953); 
+            
+            // Standards Math:
+            // SAE J1349 (Modern Net): Std is 29.234 inHg dry, 77°F (537 R)
+            const cf_sae_j1349 = 1.18 * ((29.234 / P_dry_inHg) * Math.sqrt((T_f + 459.67) / 537)) - 0.18;
+
+            // SAE J607 / STD (Classic): Std is 29.92 inHg total (assumes dry), 60°F (520 R)
+            const cf_sae_j607 = (29.92 / P_dry_inHg) * Math.sqrt((T_f + 459.67) / 520);
+
+            // DIN 70020 (European Metric): Std is 1013.25 mb total, 20°C (293.15 K)
+            const cf_din_70020 = (1013.25 / P_mb) * ((T_c + 273.15) / 293.15);
+
+            // --- Render calculations to UI elements ---
+            document.getElementById('da-val').innerText = `${Math.round(densityAltitude_ft).toLocaleString()} ft`;
+            document.getElementById('ad-val').innerText = `${airDensity_lb_ft3.toFixed(6)} lb/ft³`;
+            document.getElementById('wg-val').innerText = `${Math.round(waterGrains)} gr/lb`;
+            document.getElementById('dp-val').innerText = `${T_dp_f.toFixed(1)} °F`;
+
+            document.getElementById('sae-modern-val').innerText = cf_sae_j1349.toFixed(3);
+            document.getElementById('sae-classic-val').innerText = cf_sae_j607.toFixed(3);
+            document.getElementById('din-val').innerText = cf_din_70020.toFixed(3);
         }
 
         // Initialize Loop sequence
