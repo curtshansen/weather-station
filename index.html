@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,9 +22,7 @@
 
     <h2>Weather Station & Air Density Monitor</h2>
     <div id="status" class="status">Status: Connecting to ThingsBoard...</div>
-    
-    <div id="last-update" style="font-size: 0.9rem; color: #666; margin-bottom: 20px; font-style: italic;">Last data packet: --</div>
-    
+
     <h3>Sensor Telemetry</h3>
     <div class="dashboard">
         <div class="card">
@@ -108,31 +107,18 @@
                 
                 if (data.avg_temp && data.bp && data.sh) {
                     // Extract baseline metrics
-                    const T_f = parseFloat(data.avg_temp.value);
-                    const P_inHg = parseFloat(data.bp.value);
-                    const RH = parseFloat(data.sh.value);
-
-                    // EXTRACT THE THINGSBOARD SERVER TIMESTAMP (ts)
-                    // The 'ts' is raw Unix time in milliseconds, so we convert it to a standard JS Date object
-                    const serverTimeMs = data.avg_temp.ts; 
-                    const dataDate = new Date(serverTimeMs);
-                    
-                    // Format the clock reading cleanly (e.g., "1:15:32 PM")
-                    const formattedTime = dataDate.toLocaleTimeString();
-                    const formattedDate = dataDate.toLocaleDateString();
+                    const T_f = parseFloat(data.avg_temp[0].value);
+                    const P_inHg = parseFloat(data.bp[0].value);
+                    const RH = parseFloat(data.sh[0].value);
 
                     // Update sensor UI
                     document.getElementById('temp-val').innerText = `${T_f.toFixed(2)} °F`;
                     document.getElementById('bp-val').innerText = `${P_inHg.toFixed(2)} inHg`;
                     document.getElementById('sh-val').innerText = `${RH.toFixed(1)} %`;
-                    
-                    // UPDATE THE NEW UI ELEMENT WITH THE TRUE HARDWARE SYNC TIME
-                    document.getElementById('last-update').innerText = `Last data packet: ${formattedDate} at ${formattedTime}`;
 
                     // Run the complex thermodynamic computations
                     calculateAdvancedMetrics(T_f, P_inHg, RH);
                 }
-
 
                 document.getElementById('status').innerText = `Status: Streaming data (Last Sync: ${new Date().toLocaleTimeString()})`;
                 document.getElementById('status').style.color = "#28a745";
