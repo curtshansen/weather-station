@@ -58,8 +58,12 @@
         </div>
     </div>
 
-    <h3>HP Correction Factors</h3>
+    <h3>HP Correction Factors & Performance Index</h3>
     <div class="dashboard">
+        <div class="card hp-card" style="border-top: 4px solid #e0a800; background: #fffcf5;">
+            <div class="label">Inverted HP Avg (Multiplier)</div>
+            <div id="inv-avg-val" class="value" style="color: #d39e00; font-size: 2rem;">--</div>
+        </div>
         <div class="card hp-card">
             <div class="label">SAE J1349 (Modern/Net)</div>
             <div id="sae-modern-val" class="value">--</div>
@@ -73,6 +77,7 @@
             <div id="din-val" class="value">--</div>
         </div>
     </div>
+
 
     <script>
         // ================= CONFIGURATION =================
@@ -178,6 +183,8 @@
             const cf_din_70020 = (1013.25 / P_mb) * ((T_c + 273.15) / 293.15);
 
             // --- Render calculations to UI elements ---
+
+            // --- Render calculations to UI elements ---
             document.getElementById('da-val').innerText = `${Math.round(densityAltitude_ft).toLocaleString()} ft`;
             document.getElementById('ad-val').innerText = `${airDensity_lb_ft3.toFixed(6)} lb/ft³`;
             document.getElementById('wg-val').innerText = `${Math.round(waterGrains)} gr/lb`;
@@ -186,6 +193,13 @@
             document.getElementById('sae-modern-val').innerText = cf_sae_j1349.toFixed(3);
             document.getElementById('sae-classic-val').innerText = cf_sae_j607.toFixed(3);
             document.getElementById('din-val').innerText = cf_din_70020.toFixed(3);
+
+            // NEW MATH: Calculate the Inverse of the Correction Factor Average
+            const hpAverage = (cf_sae_j1349 + cf_sae_j607 + cf_din_70020) / 3.0;
+            const inverseAvg = 1.0 / hpAverage;
+
+            // Render the inverse average factor
+            document.getElementById('inv-avg-val').innerText = inverseAvg.toFixed(3);
         }
 
         // Initialize Loop sequence
