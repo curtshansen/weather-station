@@ -93,7 +93,7 @@
         const DEVICE_ID = "2131e120-7570-11f1-85a3-7f815107dff5"; 
         // =================================================
 
-        const POLL_INTERVAL = 3000;
+        const POLL_INTERVAL = 30000;
 
                 async function fetchLiveTelemetry() {
             const url = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=avg_temp,bp,sh`;
