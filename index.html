@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,6 +24,10 @@
 
     <h2>Weather Station & Air Density Monitor</h2>
     <div id="status" class="status">Status: Connecting to ThingsBoard...</div>
+    
+    <!-- ADD THIS LINE RIGHT HERE -->
+    <div id="last-update" style="font-size: 0.9rem; color: #666; margin-bottom: 20px; font-style: italic;">Last data packet: --</div>
+
 
     <h3>Sensor Telemetry</h3>
     <div class="dashboard">
@@ -89,7 +95,7 @@
 
         const POLL_INTERVAL = 3000;
 
-        async function fetchLiveTelemetry() {
+                async function fetchLiveTelemetry() {
             const url = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=avg_temp,bp,sh`;
 
             try {
@@ -105,16 +111,31 @@
                 
                 const data = await response.json();
                 
-                if (data.avg_temp && data.bp && data.sh) {
-                    // Extract baseline metrics
+                // FIXED: Explicitly check that each key array exists and contains at least one item [0]
+                if (data.avg_temp && data.avg_temp.length > 0 && 
+                    data.bp && data.bp.length > 0 && 
+                    data.sh && data.sh.length > 0) {
+                    
+                    // Extract baseline metrics from index 0 of the ThingsBoard arrays
                     const T_f = parseFloat(data.avg_temp[0].value);
                     const P_inHg = parseFloat(data.bp[0].value);
                     const RH = parseFloat(data.sh[0].value);
+
+                    // EXTRACT THE THINGSBOARD SERVER TIMESTAMP (ts) from index 0
+                    const serverTimeMs = data.avg_temp[0].ts; 
+                    const dataDate = new Date(serverTimeMs);
+                    
+                    // Format the clock readings cleanly
+                    const formattedTime = dataDate.toLocaleTimeString();
+                    const formattedDate = dataDate.toLocaleDateString();
 
                     // Update sensor UI
                     document.getElementById('temp-val').innerText = `${T_f.toFixed(2)} °F`;
                     document.getElementById('bp-val').innerText = `${P_inHg.toFixed(2)} inHg`;
                     document.getElementById('sh-val').innerText = `${RH.toFixed(1)} %`;
+                    
+                    // Update the true hardware sync time
+                    document.getElementById('last-update').innerText = `Last data packet: ${formattedDate} at ${formattedTime}`;
 
                     // Run the complex thermodynamic computations
                     calculateAdvancedMetrics(T_f, P_inHg, RH);
@@ -129,6 +150,7 @@
                 document.getElementById('status').style.color = "#dc3545";
             }
         }
+
 
         function calculateAdvancedMetrics(T_f, P_inHg, RH) {
             // --- Conversions ---
