@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Weather Monitor</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background: #f4f6f9; color: #333; }
+        .dashboard { display: flex; gap: 20px; max-width: 800px; flex-wrap: wrap; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); min-width: 200px; flex: 1; text-align: center; }
+        .label { font-size: 0.85rem; color: #666; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 0.5px; }
+        .value { font-size: 2rem; font-weight: bold; color: #007bff; }
+        .status { font-weight: bold; margin-bottom: 20px; color: #28a745; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+
+    <h2>Weather Station Monitor (API Key Mode)</h2>
+    <div id="status" class="status">Status: Connecting...</div>
+
+    <div class="dashboard">
+        <div class="card">
+            <div class="label">Temperature</div>
+            <div id="temp-val" class="value">-- °F</div>
+        </div>
+        <div class="card">
+            <div class="label">Barometric Pressure</div>
+            <div id="bp-val" class="value">-- inHg</div>
+        </div>
+        <div class="card">
+            <div class="label">Humidity</div>
+            <div id="sh-val" class="value">-- %</div>
+        </div>
+    </div>
+
+    <script>
+        // ================= CONFIGURATION =================
+        const TB_HOST = "thingsboard.cloud";
+        
+        // 1. Paste the API Key you generated in your account dashboard security settings
+        const API_KEY = "tb_JwyKn8FajEZale3SkTV-1a5P9z1R3WjGmeuMzFucGRiQkSPCq9G447mYPbE9aIhRWlI2XL8LQdW1xzGopPKhFg";
+        
+        // 2. Paste your device UUID (from Devices -> Weather Device -> Copy Device ID)
+        const DEVICE_ID = "2131e120-7570-11f1-85a3-7f815107dff5"; 
+        // =================================================
+
+        const POLL_INTERVAL = 60000; // Poll updates every 3 seconds
+
+        async function fetchLiveTelemetry() {
+            // Using the global REST API Telemetry Controller
+            const url = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=avg_temp,bp,sh`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // ThingsBoard API Keys use the format: ApiKey YOUR_KEY_VALUE
+                        'X-Authorization': `ApiKey ${API_KEY}`
+                    }
+                });
+
+                if (!response.ok) throw new Error(`Data fetch error: ${response.status}`);
+                
+                const data = await response.json();
+                
+                // Extracting your hardware telemetry values from arrays
+                if (data.avg_temp && data.avg_temp.length > 0) {
+                    const temp = parseFloat(data.avg_temp[0].value).toFixed(2);
+                    document.getElementById('temp-val').innerText = `${temp} °F`;
+                }
+                if (data.bp && data.bp.length > 0) {
+                    const pressure = parseFloat(data.bp[0].value).toFixed(2);
+                    document.getElementById('bp-val').innerText = `${pressure} inHg`;
+                }
+                if (data.sh && data.sh.length > 0) {
+                    const humidity = parseFloat(data.sh[0].value).toFixed(1);
+                    document.getElementById('sh-val').innerText = `${humidity} %`;
+                }
+
+                document.getElementById('status').innerText = `Status: Streaming data (Last Sync: ${new Date().toLocaleTimeString()})`;
+                document.getElementById('status').style.color = "#28a745";
+
+            } catch (error) {
+                console.error("Telemetry error:", error);
+                document.getElementById('status').innerText = "Status: Connection Error reading telemetry.";
+                document.getElementById('status').style.color = "#dc3545";
+            }
+        }
+
+        // Initialize Loop sequence
+        fetchLiveTelemetry();
+        setInterval(fetchLiveTelemetry, POLL_INTERVAL);
+    </script>
+</body>
+</html>
