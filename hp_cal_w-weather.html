@@ -69,6 +69,16 @@
         .card.hp-card {
             border-top: 3px solid #28a745;
         }
+        /* Hide all cards inside the dashboard by default */
+        .dashboard .card {
+        display: none;
+        }
+
+        /* Force only the first card to stay visible */
+        .dashboard .card:first-child {
+        display: block; 
+        }
+
         .label {
             font-size: 0.65rem;
             color: #aaa;
@@ -225,7 +235,7 @@
         </div>
     </div>
     
-    <!-- <h3>HP Factors & Index</h3>
+    <h3>HP Factors & Index</h3>
     <div class="dashboard">
         <div class="card hp-card" style="border-top: 3px solid #e0a800; background: #2a251a;">
             <div class="label">Inv HP Avg (Mult)</div>
@@ -244,8 +254,8 @@
             <div id="din-val" class="value">--</div>
         </div>
     </div>
-</div> -->
-<h3>HP Correction Factor</h3>
+</div>
+<!-- <h3>HP Correction Factor</h3>
 <div class="dashboard">
     <!-- Keep this one visible -->
     <div class="card hp-card" style="border-top: 3px solid #e0a800; background: #2a251a;">
@@ -266,7 +276,7 @@
         <div class="label">DIN 70020</div>
         <div id="din-val" class="value">--</div>
     </div>
-</div>
+</div> -->
     
 
 <div class="container">
