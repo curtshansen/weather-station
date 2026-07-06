@@ -225,7 +225,7 @@
         </div>
     </div>
     
-    <h3>HP Factors & Index</h3>
+    <!-- <h3>HP Factors & Index</h3>
     <div class="dashboard">
         <div class="card hp-card" style="border-top: 3px solid #e0a800; background: #2a251a;">
             <div class="label">Inv HP Avg (Mult)</div>
@@ -244,7 +244,30 @@
             <div id="din-val" class="value">--</div>
         </div>
     </div>
+</div> -->
+<h3>HP Factors & Index</h3>
+<div class="dashboard">
+    <!-- Keep this one visible -->
+    <div class="card hp-card" style="border-top: 3px solid #e0a800; background: #2a251a;">
+        <div class="label">Inv HP Avg (Mult)</div>
+        <div id="inv-avg-val" class="value" style="color: #ffcc00;">--</div>
+    </div>
+    
+    <!-- Hidden Cards -->
+    <div class="card hp-card" style="display: none;">
+        <div class="label">SAE J1349 (Net)</div>
+        <div id="sae-modern-val" class="value">--</div>
+    </div>
+    <div class="card hp-card" style="display: none;">
+        <div class="label">SAE J607 (STD)</div>
+        <div id="sae-classic-val" class="value">--</div>
+    </div>
+    <div class="card hp-card" style="display: none;">
+        <div class="label">DIN 70020</div>
+        <div id="din-val" class="value">--</div>
+    </div>
 </div>
+    
 
 <div class="container">
     <h2>Drag Race HP Calc</h2>
@@ -393,9 +416,9 @@ function calculateAdvancedMetrics(T_f, P_inHg, RH) {
     document.getElementById('ad-val').innerText = `${airDensity_lb_ft3.toFixed(6)} lb/ft³`;
     document.getElementById('wg-val').innerText = `${Math.round(waterGrains)} gpp`;
     document.getElementById('dp-val').innerText = `${T_dp_f.toFixed(1)} °F`;
-    //document.getElementById('sae-modern-val').innerText = cf_sae_j1349.toFixed(3);
-    //document.getElementById('sae-classic-val').innerText = cf_sae_j607.toFixed(3);
-    //document.getElementById('din-val').innerText = cf_din_70020.toFixed(3);
+    document.getElementById('sae-modern-val').innerText = cf_sae_j1349.toFixed(3);
+    document.getElementById('sae-classic-val').innerText = cf_sae_j607.toFixed(3);
+    document.getElementById('din-val').innerText = cf_din_70020.toFixed(3);
 
     const hpAverage = (cf_sae_j1349 + cf_sae_j607 + cf_din_70020) / 3.0;
     const inverseAvg = 1.0 / hpAverage;
