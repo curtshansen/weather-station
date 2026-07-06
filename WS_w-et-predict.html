@@ -589,11 +589,11 @@ function predictPerformance(currentAirDensity) {
     }
 
     // Calculate difference (Base ET - Predicted ET)
-    const etDifference = baseRun.et - predictedET;
+    const etDifference =  predictedET - baseRun.et ;
     const sign = etDifference > 0 ? "+" : ""; // Add explicit plus sign for positive changes
     
-    // Determine Color Logic (Red if predicted is less than base, Green if greater or equal)
-    const highlightColor = predictedET < baseRun.et ? "#ff4500" : "#28a745";
+    // Determine Color Logic (Green if predicted is less than base, Red if greater or equal)
+    const highlightColor = predictedET > baseRun.et ? "#ff4500" : "#28a745";
 
     const elPred = document.getElementById('resPredictedEt');
     const elDiff = document.getElementById('resEtDiff');
