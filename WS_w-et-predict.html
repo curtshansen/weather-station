@@ -433,7 +433,7 @@ function calculateAdvancedMetrics(T_f, P_inHg, RH) {
 
     const hpAverage = (cf_sae_j1349 + cf_sae_j607 + cf_din_70020) / 3.0;
     const inverseAvg = 1.0 / hpAverage;
-    document.getElementById('inv-avg-val').innerText = inverseAvg.toFixed(3);
+    document.getElementById('inv-avg-val').innerText = inverseAvg.toFixed(6);
     
     // Save to global for prediction engine
     windowGlobalInvAvg = inverseAvg;
