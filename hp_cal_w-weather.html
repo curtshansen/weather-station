@@ -530,6 +530,7 @@ function lockBaseRun() {
         mph: mph,
         area: area,
         windSpeed: windSpeed,
+        da: da,
         airDensity: airDensity,
         invAvg: windowGlobalInvAvg,
         totalHp: totalHp
@@ -539,19 +540,29 @@ function lockBaseRun() {
     calculateHorsepower(); // Re-trigger prediction 
 }
 
-function clearBaseRun() {
+// function clearBaseRun() {
+//     baseRun = { isLocked: false };
+//     localStorage.removeItem('drag_calc_baseRun');
+    
+//     const elPred = document.getElementById('resPredictedEt');
+//     const elDiff = document.getElementById('resEtDiff');
+    
+//     elPred.innerText = "--";
+//     elPred.style.color = "#00ffcc";
+    
+//     elDiff.innerText = "--";
+//     elDiff.style.color = "#00ffcc";
+    
+//     document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+// }
+
+  function clearBaseRun() {
     baseRun = { isLocked: false };
     localStorage.removeItem('drag_calc_baseRun');
     
-    const elPred = document.getElementById('resPredictedEt');
-    const elDiff = document.getElementById('resEtDiff');
-    
-    elPred.innerText = "--";
-    elPred.style.color = "#00ffcc";
-    
-    elDiff.innerText = "--";
-    elDiff.style.color = "#00ffcc";
-    
+    // Reset UI
+    document.getElementById('resPredictedEt').innerText = "--";
+    document.getElementById('resEtDiff').innerText = "--";
     document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
 }
 
@@ -565,10 +576,16 @@ function predictPerformance(currentAirDensity) {
     const currentWeight = parseFloat(document.getElementById('weight').value);
     const currentArea = parseFloat(document.getElementById('area').value);
     const currentWind = parseFloat(document.getElementById('windSpeed').value);
+  // Calculate current DA to compare against the locked base DA
+    const currentDA = parseFloat(document.getElementById('da').value);
+  // Scale HP based on the change in Density Altitude
+    // This is a more direct way to estimate power change due to air
+    const daCorrectionFactor = (1 - (currentDA / 30000)) / (1 - (baseRun.da / 30000));
+    const currentAvailableHp = baseRun.totalHp * daCorrectionFactor;
     
     // Scale the engine HP to current weather conditions
     // const currentAvailableHp = baseRun.totalHp * (windowGlobalInvAvg / baseRun.invAvg);
-    const currentAvailableHp = baseRun.totalHp * (baseRun.invAvg + (1-windowGlobalInvAvg));
+    // const currentAvailableHp = baseRun.totalHp * (baseRun.invAvg + (1-windowGlobalInvAvg));
 
     // Iterative Solver Setup
     let predictedET = baseRun.et;
@@ -618,7 +635,7 @@ function predictPerformance(currentAirDensity) {
     elDiff.innerText = `${sign}${etDifference.toFixed(4)}`;
     elDiff.style.color = highlightColor;
 
-    document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph`;
+    document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
 }
 
 function calculateHorsepower() {
