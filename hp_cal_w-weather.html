@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -68,8 +67,11 @@
         }
         .card.hp-card {
             border-top: 3px solid #28a745;
-        } 
-
+        }
+        .card.predict-card {
+            border-top: 3px solid #00ffcc;
+            background: #1a2a2a;
+        }
         .label {
             font-size: 0.65rem;
             color: #aaa;
@@ -125,7 +127,6 @@
         }
         .button-group {
             display: flex;
-            flex-direction: column;
             gap: 10px;
             margin-top: 15px;
         }
@@ -181,14 +182,99 @@
             color: #ff4500;
             font-size: 22px;
         }
+        .dashboard .hp-card:not(:first-of-type) {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+
+<div class="container" style="border: 2px solid #00ffcc;">
+    <h2 style="color: #00ffcc; border-bottom-color: #00ffcc;">ET Predictor</h2>
+    <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
+    
+    <div class="dashboard" style="margin-bottom: 5px;">
+        <div class="card predict-card">
+            <div class="label">Predicted 1/8 ET</div>
+            <div id="resPredictedEt" class="value" style="color: #00ffcc; font-size: 2.2rem;">--</div>
+        </div>
+        <div class="card predict-card">
+            <div class="label">Diff (Base - Pred)</div>
+            <div id="resEtDiff" class="value" style="color: #00ffcc; font-size: 1.6rem;">--</div>
+        </div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="lockBaseRun()" style="background-color: #28a745; flex: 2;">Lock Base Run</button>
+        <button onclick="clearBaseRun()" style="background-color: #dc3545; flex: 1;">Clear Base</button>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Drag Race Inputs</h2>
+    
+    <div class="form-group">
+        <label for="weight">Car Weight (with driver, lbs):</label>
+        <input type="text" inputmode="decimal" id="weight" value="2000">
+    </div>
+    
+    <div class="form-group">
+        <label for="et">1/8 Mile Elapsed Time (seconds):</label>
+        <input type="text" inputmode="decimal" id="et" value="4.85">
+    </div>
+
+    <div class="form-group">
+        <label for="mph">1/8 Mile Trap Speed (MPH):</label>
+        <input type="text" inputmode="decimal" id="mph" value="143.4">
+    </div>
+    
+    <div class="form-group">
+        <label for="area">Car Frontal Area (sq ft):</label>
+        <input type="text" inputmode="decimal" id="area" value="15">
+    </div>
+    
+    <div class="form-group">
+        <label for="windSpeed">Wind Speed (MPH):</label>
+        <input type="text" inputmode="text" id="windSpeed" value="0">
+        <span class="help-text">Type a minus (-) sign first for a tailwind.</span>
+    </div>
+
+    <div class="form-group">
+        <label for="da">Density Altitude (feet):</label>
+        <input type="text" inputmode="text" id="da" value="3050">
+        <span class="help-text" style="color: #00ffcc;">Auto-updates from weather telemetry feed.</span>
+    </div>
+    
+    <div class="button-group" style="flex-direction: column;">
+        <button onclick="calculateHorsepower()">Calculate Current HP Data</button>
+        <button class="reset-btn" onclick="resetToDefaults()">Reset Form to Defaults</button>
+    </div>
+    
+    <div class="results" id="resultsBox">
+        <div class="result-item">
+            <span>Used Trap Speed:</span>
+            <span class="value" id="resSpeed">0.00 MPH</span>
+        </div>
+        <div class="result-item">
+            <span>Calculated Mechanical HP:</span>
+            <span class="value" id="resMech">0.00 HP</span>
+        </div>
+        <div class="result-item">
+            <span>Aerodynamic Drag HP (Avg):</span>
+            <span class="value" id="resAero">0.00 HP</span>
+        </div>
+        <div class="result-item total">
+            <span>Total Engine HP:</span>
+            <span class="value" id="resTotal">0.00 HP</span>
+        </div>
+    </div>
+</div>  
+  
     <h2>Weather & Air Density</h2>
-    <div id="status" class="status">Status: Connecting to ThingsBoard...</div>
-    <div id="last-update" style="font-size: 0.8rem; color: #aaa; margin-bottom: 15px; font-style: italic; text-align: center;">Last data packet: --</div>
+    <div id="status" class="status">Status: Connecting to Weather Data...</div>
+    <div id="last-update" style="font-size: 0.8rem; color: #aaa; margin-bottom: 15px; font-style: italic; text-align: center;">Last time data received: --</div>
     
     <h3>Sensor Telemetry</h3>
     <div class="dashboard">
@@ -226,7 +312,7 @@
         </div>
     </div>
     
-    <h3>HP Factors & Index</h3>
+    <h3>HP Correction Factor</h3>
     <div class="dashboard">
         <div class="card hp-card" style="border-top: 3px solid #e0a800; background: #2a251a;">
             <div class="label">Inv HP Avg (Mult)</div>
@@ -247,8 +333,29 @@
     </div>
 </div>
 
-<div class="container">
-    <h2>Drag Race HP Calc</h2>
+<!-- <div class="container" style="border: 2px solid #00ffcc;">
+    <h2 style="color: #00ffcc; border-bottom-color: #00ffcc;">ET Predictor</h2>
+    <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
+    
+    <div class="dashboard" style="margin-bottom: 5px;">
+        <div class="card predict-card">
+            <div class="label">Predicted 1/8 ET</div>
+            <div id="resPredictedEt" class="value" style="color: #00ffcc; font-size: 2.2rem;">--</div>
+        </div>
+        <div class="card predict-card">
+            <div class="label">Diff (Base - Pred)</div>
+            <div id="resEtDiff" class="value" style="color: #00ffcc; font-size: 1.6rem;">--</div>
+        </div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="lockBaseRun()" style="background-color: #28a745; flex: 2;">Lock Base Run</button>
+        <button onclick="clearBaseRun()" style="background-color: #dc3545; flex: 1;">Clear Base</button>
+    </div>
+</div> -->
+
+<!-- <div class="container">
+    <h2>Drag Race Inputs</h2>
     
     <div class="form-group">
         <label for="weight">Car Weight (with driver, lbs):</label>
@@ -258,6 +365,11 @@
     <div class="form-group">
         <label for="et">1/8 Mile Elapsed Time (seconds):</label>
         <input type="text" inputmode="decimal" id="et" value="4.85">
+    </div>
+
+    <div class="form-group">
+        <label for="mph">1/8 Mile Trap Speed (MPH):</label>
+        <input type="text" inputmode="decimal" id="mph" value="143.4">
     </div>
     
     <div class="form-group">
@@ -277,14 +389,14 @@
         <span class="help-text" style="color: #00ffcc;">Auto-updates from weather telemetry feed.</span>
     </div>
     
-    <div class="button-group">
-        <button onclick="calculateHorsepower()">Calculate Horsepower</button>
-        <button class="reset-btn" onclick="resetToDefaults()">Reset to Defaults</button>
+    <div class="button-group" style="flex-direction: column;">
+        <button onclick="calculateHorsepower()">Calculate Current HP Data</button>
+        <button class="reset-btn" onclick="resetToDefaults()">Reset Form to Defaults</button>
     </div>
     
     <div class="results" id="resultsBox">
         <div class="result-item">
-            <span>Estimated Trap Speed:</span>
+            <span>Used Trap Speed:</span>
             <span class="value" id="resSpeed">0.00 MPH</span>
         </div>
         <div class="result-item">
@@ -300,7 +412,8 @@
             <span class="value" id="resTotal">0.00 HP</span>
         </div>
     </div>
-</div>
+</div> -->
+
 <script>
 // ================= CONFIGURATION =================
 const TB_HOST = "thingsboard.cloud";
@@ -308,10 +421,14 @@ const API_KEY = "tb_JwyKn8FajEZale3SkTV-1a5P9z1R3WjGmeuMzFucGRiQkSPCq9G447mYPbE9
 const DEVICE_ID = "2131e120-7570-11f1-85a3-7f815107dff5";
 const POLL_INTERVAL = 10000;
 
-// Drag Calculator Baseline Defaults
+// Prediction State Engine
+let windowGlobalInvAvg = 1.0; 
+let baseRun = { isLocked: false };
+
 const defaults = {
     weight: "2000",
     et: "4.85",
+    mph: "143.4",
     area: "15",
     windSpeed: "0",
     da: "3050"
@@ -340,13 +457,11 @@ async function fetchLiveTelemetry() {
 
             const serverTimeMs = data.avg_temp[0].ts;
             const dataDate = new Date(serverTimeMs);
-            const formattedTime = dataDate.toLocaleTimeString();
-            const formattedDate = dataDate.toLocaleDateString();
-
+            
             document.getElementById('temp-val').innerText = `${T_f.toFixed(2)} °F`;
             document.getElementById('bp-val').innerText = `${P_inHg.toFixed(2)} inHg`;
             document.getElementById('sh-val').innerText = `${RH.toFixed(1)} %`;
-            document.getElementById('last-update').innerText = `Last data packet: ${formattedDate} at ${formattedTime}`;
+            document.getElementById('last-update').innerText = `Last data packet: ${dataDate.toLocaleDateString()} at ${dataDate.toLocaleTimeString()}`;
 
             calculateAdvancedMetrics(T_f, P_inHg, RH);
         }
@@ -400,7 +515,10 @@ function calculateAdvancedMetrics(T_f, P_inHg, RH) {
 
     const hpAverage = (cf_sae_j1349 + cf_sae_j607 + cf_din_70020) / 3.0;
     const inverseAvg = 1.0 / hpAverage;
-    document.getElementById('inv-avg-val').innerText = inverseAvg.toFixed(3);
+    document.getElementById('inv-avg-val').innerText = inverseAvg.toFixed(5);
+    
+    // Save to global for prediction engine
+    windowGlobalInvAvg = inverseAvg;
 
     const roundedDA = Math.round(densityAltitude_ft);
     document.getElementById('da').value = roundedDA;
@@ -409,8 +527,9 @@ function calculateAdvancedMetrics(T_f, P_inHg, RH) {
     calculateHorsepower();
 }
 
-function loadSavedInputs() {
-    const fields = ['weight', 'et', 'area', 'windSpeed', 'da'];
+function loadSavedData() {
+    // Load inputs
+    const fields = ['weight', 'et', 'mph', 'area', 'windSpeed', 'da'];
     fields.forEach(field => {
         const savedValue = localStorage.getItem('drag_calc_m_' + field);
         if (savedValue !== null) {
@@ -418,18 +537,29 @@ function loadSavedInputs() {
             document.getElementById(field).value = savedValue;
         }
     });
+    
+    // Load Base Run
+    const savedBase = localStorage.getItem('drag_calc_baseRun');
+    if (savedBase) {
+        try {
+            baseRun = JSON.parse(savedBase);
+        } catch(e) {
+            baseRun = { isLocked: false };
+        }
+    }
 }
 
-function saveCurrentInputs(weight, et, area, windSpeed, da) {
+function saveCurrentInputs(weight, et, mph, area, windSpeed, da) {
     localStorage.setItem('drag_calc_m_weight', weight);
     localStorage.setItem('drag_calc_m_et', et);
+    localStorage.setItem('drag_calc_m_mph', mph);
     localStorage.setItem('drag_calc_m_area', area);
     localStorage.setItem('drag_calc_m_windSpeed', windSpeed);
     localStorage.setItem('drag_calc_m_da', da);
 }
 
 function resetToDefaults() {
-    const fields = ['weight', 'et', 'area', 'windSpeed', 'da'];
+    const fields = ['weight', 'et', 'mph', 'area', 'windSpeed', 'da'];
     fields.forEach(field => {
         localStorage.removeItem('drag_calc_m_' + field);
         document.getElementById(field).value = defaults[field];
@@ -437,27 +567,151 @@ function resetToDefaults() {
     calculateHorsepower();
 }
 
-function calculateHorsepower() {
+// ============== BASE RUN ENGINE ==============
+function lockBaseRun() {
+    // We lock exactly what is currently evaluated in the calculator
     const weight = parseFloat(document.getElementById('weight').value);
     const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
     const area = parseFloat(document.getElementById('area').value);
     const windSpeed = parseFloat(document.getElementById('windSpeed').value);
     const da = parseFloat(document.getElementById('da').value);
     
-    if (isNaN(weight) || isNaN(et) || isNaN(area) || isNaN(windSpeed) || isNaN(da) || et <= 0) {
-        return; 
-    }
-    
-    saveCurrentInputs(weight, et, area, windSpeed, da);
-    
-    const trapSpeed = 695.5 / et; 
-    const quarterMileEtEquivalent = et * 1.555;
+    if (isNaN(weight) || isNaN(et) || isNaN(mph)) return;
+
+    // Recalculate precisely for base conditions
     const mechanicalHp = weight / Math.pow((et / 3.7), 3);
-    //const mechanicalHp = weight / Math.pow((quarterMileEtEquivalent / 5.825), 3);
-    
     const seaLevelDensitySlugs = 0.0023769; 
     const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
     const airDensity = seaLevelDensitySlugs * densityRatio;
+    
+    let relativeAirSpeedMph = mph + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = mph * 1.46667;
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * 0.45 * area;
+    const avgAeroHp = (peakDragForce * carSpeedFps) / 550 / 3;
+    const totalHp = mechanicalHp + avgAeroHp;
+
+    baseRun = {
+        isLocked: true,
+        weight: weight,
+        et: et,
+        mph: mph,
+        area: area,
+        windSpeed: windSpeed,
+        airDensity: airDensity,
+        invAvg: windowGlobalInvAvg,
+        totalHp: totalHp
+    };
+
+    localStorage.setItem('drag_calc_baseRun', JSON.stringify(baseRun));
+    calculateHorsepower(); // Re-trigger prediction 
+}
+
+function clearBaseRun() {
+    baseRun = { isLocked: false };
+    localStorage.removeItem('drag_calc_baseRun');
+    
+    const elPred = document.getElementById('resPredictedEt');
+    const elDiff = document.getElementById('resEtDiff');
+    
+    elPred.innerText = "--";
+    elPred.style.color = "#00ffcc";
+    
+    elDiff.innerText = "--";
+    elDiff.style.color = "#00ffcc";
+    
+    document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+}
+
+function predictPerformance(currentAirDensity) {
+    if (!baseRun.isLocked) {
+        clearBaseRun(); // Ensure UI is reset if not locked
+        return;
+    }
+
+    // Pull current "What-If" inputs
+    const currentWeight = parseFloat(document.getElementById('weight').value);
+    const currentArea = parseFloat(document.getElementById('area').value);
+    const currentWind = parseFloat(document.getElementById('windSpeed').value);
+    
+    // Scale the engine HP to current weather conditions
+    // const currentAvailableHp = baseRun.totalHp * (windowGlobalInvAvg / baseRun.invAvg);
+    const currentAvailableHp = baseRun.totalHp * (baseRun.invAvg + (1-windowGlobalInvAvg));
+
+    // Iterative Solver Setup
+    let predictedET = baseRun.et;
+    let predMPH = baseRun.mph;
+    const cd = 0.45;
+
+    // Loop solves for exact mechanical/aero balance mathematically 
+    for (let i = 0; i < 20; i++) {
+        // Estimate Trap Speed for this iteration based on ET ratio
+        predMPH = baseRun.mph * (baseRun.et / predictedET);
+        
+        let relSpeedMph = predMPH + currentWind;
+        if (relSpeedMph < 0) relSpeedMph = 0;
+        
+        let relFps = relSpeedMph * 1.46667;
+        let carFps = predMPH * 1.46667;
+        
+        let peakDrag = 0.5 * currentAirDensity * Math.pow(relFps, 2) * cd * currentArea;
+        let aeroHp = (peakDrag * carFps) / 550 / 3;
+        
+        let mechHp = currentAvailableHp - aeroHp;
+        
+        if (mechHp <= 0) {
+            predictedET = 99.99; // Math failed (e.g. insane headwind)
+            break;
+        }
+        
+        // Refine the predicted ET based on available mechanical HP left over
+        predictedET = 3.7 * Math.pow(currentWeight / mechHp, 1/3);
+    }
+
+    // Calculate difference (Base ET - Predicted ET)
+    const etDifference =  predictedET - baseRun.et ;
+    const sign = etDifference > 0 ? "+" : ""; // Add explicit plus sign for positive changes
+    
+    // Determine Color Logic (Green if predicted is less than base, Red if greater or equal)
+    const highlightColor = predictedET > baseRun.et ? "#ff4500" : "#28a745";
+
+    const elPred = document.getElementById('resPredictedEt');
+    const elDiff = document.getElementById('resEtDiff');
+
+    // Update Predicted ET UI (4 decimal places, no "sec", apply color)
+    elPred.innerText = predictedET.toFixed(4);
+    elPred.style.color = highlightColor;
+    
+    // Update ET Difference UI (4 decimal places, apply color)
+    elDiff.innerText = `${sign}${etDifference.toFixed(4)}`;
+    elDiff.style.color = highlightColor;
+
+    document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s @ ${baseRun.weight}lbs`;
+}
+
+function calculateHorsepower() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+    
+    if (isNaN(weight) || isNaN(et) || isNaN(mph) || isNaN(area) || isNaN(windSpeed) || isNaN(da) || et <= 0 || mph <= 0) {
+        return; 
+    }
+    
+    saveCurrentInputs(weight, et, mph, area, windSpeed, da);
+    
+    const trapSpeed = mph; 
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio; // Current local Air Density
     
     let relativeAirSpeedMph = trapSpeed + windSpeed;
     if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
@@ -476,10 +730,13 @@ function calculateHorsepower() {
     document.getElementById('resMech').innerText = mechanicalHp.toFixed(2) + " HP";
     document.getElementById('resAero').innerText = avgAeroHp.toFixed(2) + " HP";
     document.getElementById('resTotal').innerText = totalHp.toFixed(2) + " HP";
+
+    // Trigger prediction engine with the latest weather
+    predictPerformance(airDensity);
 }
 
 window.onload = function() {
-    loadSavedInputs();
+    loadSavedData();
     calculateHorsepower();
     fetchLiveTelemetry();
     setInterval(fetchLiveTelemetry, POLL_INTERVAL);
