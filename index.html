@@ -204,15 +204,18 @@
 <div class="container" style="border: 2px solid #00ffcc;">
     <h2 style="color: #00ffcc; border-bottom-color: #00ffcc;">ET Predictor</h2>
     <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
+  <!-- Moved here from Weather Stats  -->
+  <div id="status" class="status">Status: Connecting to Weather Data...</div>
+      <div id="last-update" style="font-size: .9rem; color: #aaa; margin-bottom: 15px; font-style: normal; text-align: center;">Last time data received: --</div>
     
     <div class="dashboard" style="margin-bottom: 5px;">
         <div class="card predict-card">
             <div class="label">Predicted 1/8 ET</div>
-            <div id="resPredictedEt" class="value" style="color: #00ffcc; font-size: 2.2rem;">--</div>
+            <div id="resPredictedEt" class="value" style="color: #00ffcc; font-size: 3.0rem;">--</div>
         </div>
         <div class="card predict-card">
             <div class="label">Diff (Base - Pred)</div>
-            <div id="resEtDiff" class="value" style="color: #00ffcc; font-size: 1.6rem;">--</div>
+            <div id="resEtDiff" class="value" style="color: #00ffcc; font-size: 1.8rem;">--</div>
         </div>
     </div>
     
@@ -294,8 +297,9 @@
 
   <div class="bordered-container highlight-border">
     <h2>Weather Stats</h2>
-    <div id="status" class="status">Status: Connecting to Weather Data...</div>
-    <div id="last-update" style="font-size: .9rem; color: #aaa; margin-bottom: 15px; font-style: normal; text-align: center;">Last time data received: --</div>
+    <!-- commented out moved to ET Prediction -->
+    <!-- <div id="status" class="status">Status: Connecting to Weather Data...</div>
+    <div id="last-update" style="font-size: .9rem; color: #aaa; margin-bottom: 15px; font-style: normal; text-align: center;">Last time data received: --</div> -->
     
     <h3>Sensor Telemetry</h3>
     <div class="dashboard">
@@ -405,7 +409,7 @@ async function fetchLiveTelemetry() {
 
             calculateAdvancedMetrics(T_f, P_inHg, RH);
         }
-        document.getElementById('status').innerText = `Status: Streaming data (Last Sync: ${new Date().toLocaleTimeString()})`;
+        document.getElementById('status').innerText = `Status: Last Sync: ${new Date().toLocaleTimeString()}`;
         document.getElementById('status').style.color = "#28a745";
     } catch (error) {
         console.error("Telemetry error:", error);
