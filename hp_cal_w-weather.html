@@ -343,87 +343,6 @@
     </div>
 </div>
 
-<!-- <div class="container" style="border: 2px solid #00ffcc;">
-    <h2 style="color: #00ffcc; border-bottom-color: #00ffcc;">ET Predictor</h2>
-    <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
-    
-    <div class="dashboard" style="margin-bottom: 5px;">
-        <div class="card predict-card">
-            <div class="label">Predicted 1/8 ET</div>
-            <div id="resPredictedEt" class="value" style="color: #00ffcc; font-size: 2.2rem;">--</div>
-        </div>
-        <div class="card predict-card">
-            <div class="label">Diff (Base - Pred)</div>
-            <div id="resEtDiff" class="value" style="color: #00ffcc; font-size: 1.6rem;">--</div>
-        </div>
-    </div>
-    
-    <div class="button-group">
-        <button onclick="lockBaseRun()" style="background-color: #28a745; flex: 2;">Lock Base Run</button>
-        <button onclick="clearBaseRun()" style="background-color: #dc3545; flex: 1;">Clear Base</button>
-    </div>
-</div> -->
-
-<!-- <div class="container">
-    <h2>Drag Race Inputs</h2>
-    
-    <div class="form-group">
-        <label for="weight">Car Weight (with driver, lbs):</label>
-        <input type="text" inputmode="decimal" id="weight" value="2000">
-    </div>
-    
-    <div class="form-group">
-        <label for="et">1/8 Mile Elapsed Time (seconds):</label>
-        <input type="text" inputmode="decimal" id="et" value="4.85">
-    </div>
-
-    <div class="form-group">
-        <label for="mph">1/8 Mile Trap Speed (MPH):</label>
-        <input type="text" inputmode="decimal" id="mph" value="143.4">
-    </div>
-    
-    <div class="form-group">
-        <label for="area">Car Frontal Area (sq ft):</label>
-        <input type="text" inputmode="decimal" id="area" value="15">
-    </div>
-    
-    <div class="form-group">
-        <label for="windSpeed">Wind Speed (MPH):</label>
-        <input type="text" inputmode="text" id="windSpeed" value="0">
-        <span class="help-text">Type a minus (-) sign first for a tailwind.</span>
-    </div>
-
-    <div class="form-group">
-        <label for="da">Density Altitude (feet):</label>
-        <input type="text" inputmode="text" id="da" value="3050">
-        <span class="help-text" style="color: #00ffcc;">Auto-updates from weather telemetry feed.</span>
-    </div>
-    
-    <div class="button-group" style="flex-direction: column;">
-        <button onclick="calculateHorsepower()">Calculate Current HP Data</button>
-        <button class="reset-btn" onclick="resetToDefaults()">Reset Form to Defaults</button>
-    </div>
-    
-    <div class="results" id="resultsBox">
-        <div class="result-item">
-            <span>Used Trap Speed:</span>
-            <span class="value" id="resSpeed">0.00 MPH</span>
-        </div>
-        <div class="result-item">
-            <span>Calculated Mechanical HP:</span>
-            <span class="value" id="resMech">0.00 HP</span>
-        </div>
-        <div class="result-item">
-            <span>Aerodynamic Drag HP (Avg):</span>
-            <span class="value" id="resAero">0.00 HP</span>
-        </div>
-        <div class="result-item total">
-            <span>Total Engine HP:</span>
-            <span class="value" id="resTotal">0.00 HP</span>
-        </div>
-    </div>
-</div> -->
-
 <script>
 // ================= CONFIGURATION =================
 const TB_HOST = "thingsboard.cloud";
@@ -586,7 +505,7 @@ function lockBaseRun() {
     const area = parseFloat(document.getElementById('area').value);
     const windSpeed = parseFloat(document.getElementById('windSpeed').value);
     const da = parseFloat(document.getElementById('da').value);
-    
+
     if (isNaN(weight) || isNaN(et) || isNaN(mph)) return;
 
     // Recalculate precisely for base conditions
@@ -699,7 +618,7 @@ function predictPerformance(currentAirDensity) {
     elDiff.innerText = `${sign}${etDifference.toFixed(4)}`;
     elDiff.style.color = highlightColor;
 
-    document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s @ ${baseRun.weight}lbs`;
+    document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph`;
 }
 
 function calculateHorsepower() {
