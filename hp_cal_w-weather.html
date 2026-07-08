@@ -185,6 +185,16 @@
         .dashboard .hp-card:not(:first-of-type) {
             display: none;
         }
+        .bordered-container {
+            border: 2px solid #2d2d2d; /* Subtle grey border */
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #1e1e1e;
+        }
+        .highlight-border {
+            border: 2px solid #00ffcc;
+        }
     </style>
 </head>
 <body>
@@ -212,7 +222,7 @@
     </div>
 </div>
 
-<div class="container">
+<div class="bordered-container highlight-border">
     <h2>Drag Race Inputs</h2>
     
     <!-- <div class="form-group">
@@ -281,7 +291,8 @@
         </div>
     </div>
 </div>  
-  
+
+  <div class="bordered-container highlight-border">
     <h2>Weather Stats</h2>
     <div id="status" class="status">Status: Connecting to Weather Data...</div>
     <div id="last-update" style="font-size: .9rem; color: #aaa; margin-bottom: 15px; font-style: normal; text-align: center;">Last time data received: --</div>
