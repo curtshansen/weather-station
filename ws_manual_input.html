@@ -324,15 +324,15 @@
         <div class="dashboard">
             <div class="card">
                 <div class="label">Temp (°F)</div>
-                <input type="number" id="temp-in" value="70" oninput="triggerManualCalc()">
+                <input type="number" id="temp-in" value="70.1" step="0.1" oninput="triggerManualCalc()">
             </div>
             <div class="card">
                 <div class="label">Baro (inHg)</div>
-                <input type="number" id="bp-in" value="29.92" oninput="triggerManualCalc()">
+                <input type="number" id="bp-in" value="29.92" step="0.01" oninput="triggerManualCalc()">
             </div>
             <div class="card">
                 <div class="label">Humidity (%)</div>
-                <input type="number" id="sh-in" value="50" oninput="triggerManualCalc()">
+                <input type="number" id="sh-in" value="50.1" step="0.1" oninput="triggerManualCalc()">
             </div>
         </div>
     
@@ -766,5 +766,4 @@ function saveWeatherInputs() {
 </script>
 </body>
 </html>
-
 
