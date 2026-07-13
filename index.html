@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -195,6 +196,9 @@
         .highlight-border {
             border: 2px solid #00ffcc;
         }
+        .prediction-dashboard {
+            grid-template-columns: 1fr !important;
+        }
     </style>
 </head>
 <body>
@@ -209,10 +213,10 @@
   <!-- ---------------------------------------------------------------------- -->
       <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
     
-    <div class="dashboard" style="margin-bottom: 5px;">
+    <div class="dashboard prediction-dashboard" style="margin-bottom: 5px;">
         <div class="card predict-card">
             <div class="label">Predicted 1/8 ET</div>
-            <div id="resPredictedEt" class="value" style="color: #00ffcc; font-size: 2.7rem;">--</div>
+            <div id="resPredictedEt" class="value" style="color: #00ffcc; font-size: 3.5rem;">--</div>
         </div>
         <div class="card predict-card">
             <div class="label">Diff (Base - Pred)</div>
@@ -236,7 +240,7 @@
     
     <div class="form-group">
         <label for="et">1/8 Mile Elapsed Time (seconds):</label>
-        <input type="text" inputmode="decimal" id="et" value="4.85">
+          <input type="text" inputmode="decimal" id="et" value="4.85">
     </div>
 
     <div class="form-group">
