@@ -1,1 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ET Predictor - Weather Stats</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #121212;
+            color: #f5f5f5;
+            padding: 12px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            max-width: 440px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #ff4500;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #2d2d2d;
+            padding-bottom: 8px;
+        }
+        h3 {
+            margin-top: 15px;
+            color: #ff4500;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-align: left;
+            width: 100%;
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .card {
+            background: #2a2a2a;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .card.highlight { border-top: 3px solid #007bff; }
+        .card.hp-card { border-top: 3px solid #28a745; }
+        .card.predict-card {
+            border-top: 3px solid #00ffcc;
+            background: #1a2a2a;
+        }
+        .label {
+            font-size: 0.65rem;
+            color: #aaa;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        .status {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #e0a800;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 14px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            color: #e0e0e0;
+        }
+        .help-text {
+            font-size: 11px;
+            color: #999;
+            margin-top: 3px;
+            display: block;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background-color: #2a2a2a;
+            color: #fff;
+            font-size: 15px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+        }
+        input[type="text"]:focus, select:focus {
+            border-color: #ff4500;
+            background-color: #333;
+            outline: none;
+        }
+        select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ffffff%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px top 50%;
+            background-size: 12px auto;
+            padding-right: 30px;
+        }
+        
+        .telemetry-input {
+            width: 100%;
+            background: transparent;
+            border: 1px solid transparent;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 4px;
+            border-radius: 4px;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+        .telemetry-input:focus { outline: none; }
+        .telemetry-input.editable {
+            background-color: #333;
+            border-color: #ff4500;
+            color: #ff4500;
+        }
+        .telemetry-input::-webkit-outer-spin-button,
+        .telemetry-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin: 0 10px;
+        }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #28a745;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        .toggle-switch input:checked + .slider { background-color: #ff4500; }
+        .toggle-switch input:checked + .slider:before { transform: translateX(26px); }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        button:active { background-color: #c93600; }
+        button.reset-btn { background-color: #3a3a3a; color: #ccc; }
+        button.reset-btn:active { background-color: #2b2b2b; }
+        
+        .car-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        .btn-add { background-color: #007bff; flex: 1; padding: 10px; font-size: 13px;}
+        .btn-add:active { background-color: #0056b3; }
+        .btn-del { background-color: #dc3545; flex: 1; padding: 10px; font-size: 13px;}
+        .btn-del:active { background-color: #a71d2a; }
+
+        .results {
+            margin-top: 20px;
+            padding-top: 12px;
+            border-top: 2px solid #2d2d2d;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #b0b0b0;
+        }
+        .result-item span.value {
+            font-weight: bold;
+            color: #00ffcc;
+            font-size: 15px;
+        }
+        .result-item.total {
+            font-size: 16px;
+            border-top: 1px dashed #444;
+            padding-top: 12px;
+            margin-top: 12px;
+            color: #fff;
+        }
+        .result-item.total span.value {
+            color: #ff4500;
+            font-size: 22px;
+        }
+        .dashboard .hp-card:not(:first-of-type) { display: none; }
+        .bordered-container {
+            border: 2px solid #2d2d2d; 
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #1e1e1e;
+        }
+        .highlight-border { border: 2px solid #00ffcc; }
+        .prediction-dashboard { grid-template-columns: 1fr !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- NEW CAR MANAGEMENT SECTION -->
+<div class="bordered-container" style="border-color: #ff4500; padding-bottom: 15px;">
+    <h2 style="color: #ff4500; border-bottom-color: #ff4500; margin-top: 0;">Garage Profiles</h2>
+    <div class="car-controls">
+        <select id="carSelect" onchange="changeCar()" style="flex: 3;"></select>
+        <button class="btn-add" onclick="addCar()">+ Add</button>
+        <button class="btn-del" onclick="deleteCar()">Delete</button>
+    </div>
+</div>
+
+<div class="container" style="border: 2px solid #00ffcc; padding: 20px; margin-bottom: 20px;">
+    <h2 style="color: #00ffcc; border-bottom-color: #00ffcc; margin-top: 0;">ET Predictor</h2>
+  <div id="status" class="status">Status: Connecting to Weather Data...</div>
+      <div id="last-update" style="font-size: .9rem; color: #aaa; margin-bottom: 15px; font-style: normal; text-align: center;">Last time data received: --</div>
+      <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
+    
+    <div class="dashboard prediction-dashboard" style="margin-bottom: 5px;">
+        <div class="card predict-card">
+            <div class="label">Predicted 1/8 ET</div>
+            <div id="resPredictedEt" class="value" style="color: #00ffcc; font-size: 3.5rem;">--</div>
+        </div>
+        <div class="card predict-card">
+            <div class="label">Diff (Base - Pred)</div>
+            <div id="resEtDiff" class="value" style="color: #00ffcc; font-size: 1.8rem;">--</div>
+        </div>
+    </div>
+    
+    <div class="button-group">
+        <button onclick="lockBaseRun()" style="background-color: #28a745; flex: 2;">Lock Base Run</button>
+        <button onclick="clearBaseRun()" style="background-color: #dc3545; flex: 1;">Clear Base</button>
+    </div>
+</div>
+
+<div class="bordered-container highlight-border">
+    <h2>Drag Race Inputs</h2>
+    
+    <div class="form-group">
+        <label for="et">1/8 Mile Elapsed Time (seconds):</label>
+          <input type="text" inputmode="decimal" id="et" value="4.85">
+    </div>
+
+    <div class="form-group">
+        <label for="mph">1/8 Mile Trap Speed (MPH):</label>
+        <input type="text" inputmode="decimal" id="mph" value="143.4">
+    </div>
+    
+    <div class="form-group">
+        <label for="windSpeed">Wind Speed (MPH):</label>
+        <input type="text" inputmode="text" id="windSpeed" value="0">
+        <span class="help-text">Type a minus (-) sign first for a tailwind.</span>
+    </div>
+  
+    <div class="form-group">
+        <label for="weight">Car Weight (with driver, lbs):</label>
+        <input type="text" inputmode="decimal" id="weight" value="2000">
+    </div>
+  
+     <div class="form-group">
+        <label for="area">Car Frontal Area (sq ft):</label>
+        <input type="text" inputmode="decimal" id="area" value="15">
+    </div>
+
+    <div class="form-group">
+        <label for="da">Density Altitude (feet):</label>
+        <input type="text" inputmode="text" id="da" value="3050">
+        <span class="help-text" style="color: #00ffcc;">Auto-updates from weather telemetry feed.</span>
+    </div>
+    
+    <div class="button-group" style="flex-direction: column;">
+        <button onclick="calculateHorsepower()">Calculate Current HP Data</button>
+        <button class="reset-btn" onclick="resetToDefaults()">Reset Form to Defaults</button>
+    </div>
+    
+    <div class="results" id="resultsBox">
+        <div class="result-item">
+            <span>Used Trap Speed:</span>
+            <span class="value" id="resSpeed">0.00 MPH</span>
+        </div>
+        <div class="result-item">
+            <span>Calculated Mechanical HP:</span>
+            <span class="value" id="resMech">0.00 HP</span>
+        </div>
+        <div class="result-item">
+            <span>Aerodynamic Drag HP (Avg):</span>
+            <span class="value" id="resAero">0.00 HP</span>
+        </div>
+        <div class="result-item total">
+            <span>Total Engine HP:</span>
+            <span class="value" id="resTotal">0.00 HP</span>
+        </div>
+    </div>
+</div>  
+
+  <div class="bordered-container highlight-border">
+    <h2>Weather Stats</h2>
+    
+    <div class="mode-toggle">
+        <span id="autoLabel" style="color: #28a745; font-size: 13px; font-weight: bold;">Auto Fill</span>
+        <label class="toggle-switch">
+            <input type="checkbox" id="modeToggle" onchange="toggleMode()">
+            <span class="slider"></span>
+        </label>
+        <span id="manualLabel" style="color: #aaa; font-size: 13px; font-weight: bold;">Manual Input</span>
+    </div>
+
+    <h3>Sensor Telemetry</h3>
+    <div class="dashboard">
+        <div class="card">
+            <div class="label">Temp (°F)</div>
+            <input type="number" id="temp-val" class="telemetry-input" value="0" step="0.1" readonly oninput="manualCalculate()">
+        </div>
+        <div class="card">
+            <div class="label">Baro (inHg)</div>
+            <input type="number" id="bp-val" class="telemetry-input" value="0" step="0.01" readonly oninput="manualCalculate()">
+        </div>
+        <div class="card">
+            <div class="label">Humidity (%)</div>
+            <input type="number" id="sh-val" class="telemetry-input" value="0" step="0.1" readonly oninput="manualCalculate()">
+        </div>
+    </div>
+    
+    <h3>Calculated Air Metrics</h3>
+    <div class="dashboard">
+        <div class="card highlight">
+            <div class="label">Density Altitude</div>
+            <div id="da-val" class="value">--</div>
+        </div>
+        <div class="card highlight">
+            <div class="label">Air Density</div>
+            <div id="ad-val" class="value" style="font-size: 0.95rem;">--</div>
+        </div>
+        <div class="card highlight">
+            <div class="label">Water Grains</div>
+            <div id="wg-val" class="value">--</div>
+        </div>
+        <div class="card highlight">
+            <div class="label">Dew Point</div>
+            <div id="dp-val" class="value">--</div>
+        </div>
+    </div>
+    
+    <h3>HP Correction Factor</h3>
+    <div class="dashboard">
+        <div class="card hp-card" style="border-top: 3px solid #e0a800; background: #2a251a;">
+            <div class="label">Inv HP Avg (Mult)</div>
+            <div id="inv-avg-val" class="value" style="color: #ffcc00;">--</div>
+        </div>
+        <div class="card hp-card">
+            <div class="label">SAE J1349 (Net)</div>
+            <div id="sae-modern-val" class="value">--</div>
+        </div>
+        <div class="card hp-card">
+            <div class="label">SAE J607 (STD)</div>
+            <div id="sae-classic-val" class="value">--</div>
+        </div>
+        <div class="card hp-card">
+            <div class="label">DIN 70020</div>
+            <div id="din-val" class="value">--</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ================= CONFIGURATION =================
+const TB_HOST = "thingsboard.cloud";
+const API_KEY = "tb_JwyKn8FajEZale3SkTV-1a5P9z1R3WjGmeuMzFucGRiQkSPCq9G447mYPbE9aIhRWlI2XL8LQdW1xzGopPKhFg";
+const DEVICE_ID = "2131e120-7570-11f1-85a3-7f815107dff5";
+const POLL_INTERVAL = 10000;
+
+// ================= STATE =================
+let windowGlobalInvAvg = 1.0; 
+let baseRun = { isLocked: false };
+let isManualMode = false;
+let hasReceivedTelemetryDa = false;
+
+const defaults = {
+    weight: "2000",
+    et: "4.85",
+    mph: "143.4",
+    area: "15",
+    windSpeed: "0",
+    da: "3050"
+};
+
+// Garage Data State
+let carsData = {};
+let currentCarName = "";
+
+// ================= CAR MANAGEMENT =================
+function initCars() {
+    // 1. Load Cars Garage from Local Storage
+    const savedGarage = localStorage.getItem('drag_calc_carsData');
+    if (savedGarage) {
+        try { carsData = JSON.parse(savedGarage); } catch(e) { carsData = {}; }
+    }
+    
+    // 2. Migration: If no garage exists, but old single-car data does, port it over safely
+    if (Object.keys(carsData).length === 0) {
+        const legacyWeight = localStorage.getItem('drag_calc_m_weight');
+        carsData = { "Default Car": { inputs: {...defaults}, baseRun: { isLocked: false } } };
+        
+        if (legacyWeight) {
+            carsData["Default Car"].inputs = {
+                weight: legacyWeight,
+                et: localStorage.getItem('drag_calc_m_et') || defaults.et,
+                mph: localStorage.getItem('drag_calc_m_mph') || defaults.mph,
+                area: localStorage.getItem('drag_calc_m_area') || defaults.area,
+                windSpeed: localStorage.getItem('drag_calc_m_windSpeed') || defaults.windSpeed,
+                da: localStorage.getItem('drag_calc_m_da') || defaults.da
+            };
+            const legacyBase = localStorage.getItem('drag_calc_baseRun');
+            if (legacyBase) {
+                try { carsData["Default Car"].baseRun = JSON.parse(legacyBase); } catch(e){}
+            }
+            // Wipe legacy keys so they don't sit unused
+            ['weight','et','mph','area','windSpeed','da'].forEach(k => localStorage.removeItem('drag_calc_m_'+k));
+            localStorage.removeItem('drag_calc_baseRun');
+        }
+    }
+    
+    // 3. Set Active Car
+    const savedCurrent = localStorage.getItem('drag_calc_currentCar');
+    if (savedCurrent && carsData[savedCurrent]) {
+        currentCarName = savedCurrent;
+    } else {
+        currentCarName = Object.keys(carsData)[0];
+    }
+    
+    updateCarDropdown();
+}
+
+function updateCarDropdown() {
+    const select = document.getElementById('carSelect');
+    select.innerHTML = '';
+    for (let name in carsData) {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        if (name === currentCarName) opt.selected = true;
+        select.appendChild(opt);
+    }
+}
+
+function changeCar() {
+    currentCarName = document.getElementById('carSelect').value;
+    localStorage.setItem('drag_calc_currentCar', currentCarName);
+    loadCarData(); 
+}
+
+function addCar() {
+    const name = prompt("Enter a name for the new car:");
+    if (!name || name.trim() === "") return;
+    if (carsData[name]) {
+        alert("A car with this name already exists.");
+        return;
+    }
+    carsData[name] = { inputs: {...defaults}, baseRun: { isLocked: false } };
+    currentCarName = name;
+    
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    localStorage.setItem('drag_calc_currentCar', currentCarName);
+    
+    updateCarDropdown();
+    loadCarData();
+}
+
+function deleteCar() {
+    if (Object.keys(carsData).length <= 1) {
+        alert("You must have at least one profile in your garage.");
+        return;
+    }
+    if (confirm(`Are you sure you want to delete profile: "${currentCarName}"?`)) {
+        delete carsData[currentCarName];
+        currentCarName = Object.keys(carsData)[0]; // Fall back to first available
+        
+        localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+        localStorage.setItem('drag_calc_currentCar', currentCarName);
+        
+        updateCarDropdown();
+        loadCarData();
+    }
+}
+
+function loadCarData() {
+    const car = carsData[currentCarName];
+    
+    // Load UI Inputs
+    const fields = ['weight', 'et', 'mph', 'area', 'windSpeed', 'da'];
+    fields.forEach(f => {
+        if (f === 'da' && hasReceivedTelemetryDa) return; // Keep live DA overriding
+        if (car.inputs[f] !== undefined) document.getElementById(f).value = car.inputs[f];
+    });
+    
+    // Load Base Run
+    baseRun = car.baseRun || { isLocked: false };
+    
+    if (!baseRun.isLocked) {
+        document.getElementById('resPredictedEt').innerText = "--";
+        document.getElementById('resEtDiff').innerText = "--";
+        document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+    } else {
+        document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
+    }
+    
+    calculateHorsepower();
+}
+
+function saveCurrentInputs(weight, et, mph, area, windSpeed, da) {
+    carsData[currentCarName].inputs = { weight, et, mph, area, windSpeed, da };
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+}
+
+function resetToDefaults() {
+    carsData[currentCarName].inputs = {...defaults};
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    loadCarData(); // Resets UI and recalculates
+}
+
+// ================= TELEMETRY & MODE TOGGLE =================
+function toggleMode() {
+    isManualMode = document.getElementById('modeToggle').checked;
+    const inputs = document.querySelectorAll('.telemetry-input');
+    const autoLabel = document.getElementById('autoLabel');
+    const manualLabel = document.getElementById('manualLabel');
+    const statusText = document.getElementById('status');
+    const lastUpdateText = document.getElementById('last-update');
+
+    if (isManualMode) {
+        inputs.forEach(input => {
+            input.readOnly = false;
+            input.classList.add('editable');
+        });
+        autoLabel.style.color = "#aaa";
+        manualLabel.style.color = "#ff4500";
+        statusText.innerText = "Status: Manual Input Mode";
+        statusText.style.color = "#ff4500";
+        lastUpdateText.innerText = "Telemetry updates paused.";
+        manualCalculate(); 
+    } else {
+        inputs.forEach(input => {
+            input.readOnly = true;
+            input.classList.remove('editable');
+        });
+        autoLabel.style.color = "#28a745";
+        manualLabel.style.color = "#aaa";
+        statusText.innerText = "Status: Reconnecting to Weather Data...";
+        statusText.style.color = "#e0a800";
+        fetchLiveTelemetry(); 
+    }
+}
+
+function manualCalculate() {
+    if (!isManualMode) return;
+    const t = parseFloat(document.getElementById('temp-val').value);
+    const bp = parseFloat(document.getElementById('bp-val').value);
+    const sh = parseFloat(document.getElementById('sh-val').value);
+
+    if (!isNaN(t) && !isNaN(bp) && !isNaN(sh)) {
+        calculateAdvancedMetrics(t, bp, sh);
+    }
+}
+
+async function fetchLiveTelemetry() {
+    if (isManualMode) return; 
+
+    const url = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=avg_temp,bp,sh`;
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Authorization': `ApiKey ${API_KEY}`
+            }
+        });
+        if (!response.ok) throw new Error(`Data fetch error: ${response.status}`);
+        const data = await response.json();
+
+        if (data.avg_temp && data.avg_temp.length > 0 && data.bp && data.bp.length > 0 && data.sh && data.sh.length > 0) {
+            const T_f = parseFloat(data.avg_temp[0].value);
+            const P_inHg = parseFloat(data.bp[0].value);
+            const RH = parseFloat(data.sh[0].value);
+            const serverTimeMs = data.avg_temp[0].ts;
+            const dataDate = new Date(serverTimeMs);
+            
+            document.getElementById('temp-val').value = T_f.toFixed(2);
+            document.getElementById('bp-val').value = P_inHg.toFixed(2);
+            document.getElementById('sh-val').value = RH.toFixed(1);
+            document.getElementById('last-update').innerText = `Last data packet: ${dataDate.toLocaleDateString()} at ${dataDate.toLocaleTimeString()}`;
+
+            calculateAdvancedMetrics(T_f, P_inHg, RH);
+        }
+        document.getElementById('status').innerText = `Status: Last Sync: ${new Date().toLocaleTimeString()}`;
+        document.getElementById('status').style.color = "#28a745";
+    } catch (error) {
+        console.error("Telemetry error:", error);
+        document.getElementById('status').innerText = "Status: Connection Error reading telemetry.";
+        document.getElementById('status').style.color = "#dc3545";
+    }
+}
+
+function calculateAdvancedMetrics(T_f, P_inHg, RH) {
+    const T_c = (T_f - 32) * 5 / 9;
+    const T_k = T_c + 273.15;
+    const P_mb = P_inHg * 33.8639;
+
+    const a = 17.27;
+    const b = 237.7;
+    const alpha = ((a * T_c) / (b + T_c)) + Math.log(RH / 100);
+    const T_dp_c = (b * alpha) / (a - alpha);
+    const T_dp_f = (T_dp_c * 9 / 5) + 32;
+
+    const Es_mb = 6.112 * Math.exp((17.67 * T_c) / (T_c + 243.5));
+    const Pv_mb = Es_mb * (RH / 100);
+    const P_dry_mb = P_mb - Pv_mb;
+    const waterGrains = 7000 * 0.62198 * (Pv_mb / P_dry_mb);
+
+    const R_dry = 287.058;
+    const R_vapor = 461.495;
+    const P_dry_pa = P_dry_mb * 100;
+    const Pv_pa = Pv_mb * 100;
+    const rho_kg_m3 = (P_dry_pa / (R_dry * T_k)) + (Pv_pa / (R_vapor * T_k));
+    const airDensity_lb_ft3 = rho_kg_m3 * 0.06242796;
+
+    const rho_standard = 1.225;
+    const densityAltitude_ft = (1 - Math.pow((rho_kg_m3 / rho_standard), 0.234969)) / 0.000006875585;
+
+    const P_dry_inHg = P_inHg - (Pv_mb * 0.02953);
+    const cf_sae_j1349 = 1.18 * ((29.234 / P_dry_inHg) * Math.sqrt((T_f + 459.67) / 537)) - 0.18;
+    const cf_sae_j607 = (29.92 / P_dry_inHg) * Math.sqrt((T_f + 459.67) / 520);
+    const cf_din_70020 = (1013.25 / P_mb) * ((T_c + 273.15) / 293.15);
+
+    document.getElementById('da-val').innerText = `${Math.round(densityAltitude_ft).toLocaleString()} ft`;
+    document.getElementById('ad-val').innerText = `${airDensity_lb_ft3.toFixed(6)} lb/ft³`;
+    document.getElementById('wg-val').innerText = `${Math.round(waterGrains)} gpp`;
+    document.getElementById('dp-val').innerText = `${T_dp_f.toFixed(1)} °F`;
+    document.getElementById('sae-modern-val').innerText = cf_sae_j1349.toFixed(3);
+    document.getElementById('sae-classic-val').innerText = cf_sae_j607.toFixed(3);
+    document.getElementById('din-val').innerText = cf_din_70020.toFixed(3);
+
+    const hpAverage = (cf_sae_j1349 + cf_sae_j607 + cf_din_70020) / 3.0;
+    const inverseAvg = 1.0 / hpAverage;
+    document.getElementById('inv-avg-val').innerText = inverseAvg.toFixed(5);
+    
+    windowGlobalInvAvg = inverseAvg;
+
+    const roundedDA = Math.round(densityAltitude_ft);
+    document.getElementById('da').value = roundedDA;
+    hasReceivedTelemetryDa = true;
+    
+    calculateHorsepower();
+}
+
+// ============== BASE RUN ENGINE ==============
+function lockBaseRun() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+
+    if (isNaN(weight) || isNaN(et) || isNaN(mph)) return;
+
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio;
+    
+    let relativeAirSpeedMph = mph + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = mph * 1.46667;
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * 0.45 * area;
+    const avgAeroHp = (peakDragForce * carSpeedFps) / 550 / 3;
+    const totalHp = mechanicalHp + avgAeroHp;
+
+    baseRun = {
+        isLocked: true,
+        weight: weight,
+        et: et,
+        mph: mph,
+        area: area,
+        windSpeed: windSpeed,
+        da: da,
+        airDensity: airDensity,
+        invAvg: windowGlobalInvAvg,
+        totalHp: totalHp
+    };
+
+    // Save to the specific car profile
+    carsData[currentCarName].baseRun = baseRun;
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    
+    calculateHorsepower(); 
+}
+
+function clearBaseRun() {
+    baseRun = { isLocked: false };
+    carsData[currentCarName].baseRun = baseRun;
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    
+    document.getElementById('resPredictedEt').innerText = "--";
+    document.getElementById('resEtDiff').innerText = "--";
+    document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+}
+
+function predictPerformance(currentAirDensity) {
+    if (!baseRun.isLocked) {
+        clearBaseRun(); 
+        return;
+    }
+
+    const currentWeight = parseFloat(document.getElementById('weight').value);
+    const currentArea = parseFloat(document.getElementById('area').value);
+    const currentWind = parseFloat(document.getElementById('windSpeed').value);
+    const currentDA = parseFloat(document.getElementById('da').value);
+  
+    const daCorrectionFactor = (1 - (currentDA / 30000)) / (1 - (baseRun.da / 30000));
+    const currentAvailableHp = baseRun.totalHp * daCorrectionFactor;
+
+    let predictedET = baseRun.et;
+    let predMPH = baseRun.mph;
+    const cd = 0.45;
+
+    for (let i = 0; i < 20; i++) {
+        predMPH = baseRun.mph * (baseRun.et / predictedET);
+        
+        let relSpeedMph = predMPH + currentWind;
+        if (relSpeedMph < 0) relSpeedMph = 0;
+        
+        let relFps = relSpeedMph * 1.46667;
+        let carFps = predMPH * 1.46667;
+        
+        let peakDrag = 0.5 * currentAirDensity * Math.pow(relFps, 2) * cd * currentArea;
+        let aeroHp = (peakDrag * carFps) / 550 / 3;
+        
+        let mechHp = currentAvailableHp - aeroHp;
+        
+        if (mechHp <= 0) {
+            predictedET = 99.99;
+            break;
+        }
+        
+        predictedET = 3.7 * Math.pow(currentWeight / mechHp, 1/3);
+    }
+
+    const etDifference =  predictedET - baseRun.et ;
+    const sign = etDifference > 0 ? "+" : ""; 
+    
+    const highlightColor = predictedET > baseRun.et ? "#ff4500" : "#28a745";
+
+    const elPred = document.getElementById('resPredictedEt');
+    const elDiff = document.getElementById('resEtDiff');
+
+    elPred.innerText = predictedET.toFixed(4);
+    elPred.style.color = highlightColor;
+    
+    elDiff.innerText = `${sign}${etDifference.toFixed(4)}`;
+    elDiff.style.color = highlightColor;
+
+    document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
+}
+
+function calculateHorsepower() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+    
+    if (isNaN(weight) || isNaN(et) || isNaN(mph) || isNaN(area) || isNaN(windSpeed) || isNaN(da) || et <= 0 || mph <= 0) {
+        return; 
+    }
+    
+    saveCurrentInputs(weight, et, mph, area, windSpeed, da);
+    
+    const trapSpeed = mph; 
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio; 
+    
+    let relativeAirSpeedMph = trapSpeed + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = trapSpeed * 1.46667;
+    
+    const cd = 0.45; 
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * cd * area;
+    const peakAeroHp = (peakDragForce * carSpeedFps) / 550;
+    const avgAeroHp = peakAeroHp / 3;
+    
+    const totalHp = mechanicalHp + avgAeroHp;
+    
+    document.getElementById('resSpeed').innerText = trapSpeed.toFixed(2) + " MPH";
+    document.getElementById('resMech').innerText = mechanicalHp.toFixed(2) + " HP";
+    document.getElementById('resAero').innerText = avgAeroHp.toFixed(2) + " HP";
+    document.getElementById('resTotal').innerText = totalHp.toFixed(2) + " HP";
+
+    predictPerformance(airDensity);
+}
+
+window.onload = function() {
+    initCars();
+    loadCarData();
+    fetchLiveTelemetry();
+    setInterval(fetchLiveTelemetry, POLL_INTERVAL);
+};
+</script>
+</body>
+</html>
 
