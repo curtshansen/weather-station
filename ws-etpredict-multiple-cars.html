@@ -272,14 +272,14 @@
 <div class="container">
 
 <!-- NEW CAR MANAGEMENT SECTION -->
-<div class="bordered-container" style="border-color: #ff4500; padding-bottom: 15px;">
+<!-- <div class="bordered-container" style="border-color: #ff4500; padding-bottom: 15px;">
     <h2 style="color: #ff4500; border-bottom-color: #ff4500; margin-top: 0;">Car Profiles</h2>
     <div class="car-controls">
         <select id="carSelect" onchange="changeCar()" style="flex: 3;"></select>
         <button class="btn-add" onclick="addCar()">+ Add</button>
         <button class="btn-del" onclick="deleteCar()">Delete</button>
     </div>
-</div>
+</div> -->
 
 <div class="container" style="border: 2px solid #00ffcc; padding: 20px; margin-bottom: 20px;">
     <h2 style="color: #00ffcc; border-bottom-color: #00ffcc; margin-top: 0;">ET Predictor</h2>
@@ -310,9 +310,18 @@
         <button onclick="clearBaseRun()" style="background-color: #dc3545; flex: 1.5; font-size: 13px; padding: 12px 6px;">Delete Base</button>
     </div>
 </div>
+<!-- NEW CAR MANAGEMENT SECTION -->
+<div class="bordered-container highlight-border"  padding-bottom: 15px;">
+    <h2 style="color: #00ffcc; border-bottom-color: #00ffcc; margin-top: 0;">Car Profiles</h2>
+    <div class="car-controls">
+        <select id="carSelect" onchange="changeCar()" style="flex: 3;"></select>
+        <button class="btn-add" onclick="addCar()">+ Add</button>
+        <button class="btn-del" onclick="deleteCar()">Delete</button>
+    </div>
+</div>
 
 <div class="bordered-container highlight-border">
-    <h2>Base Run Inputs</h2>
+    <h2 style="color: #00ffcc; border-bottom-color: #00ffcc; margin-top: 0;">Base Run Inputs</h2>
     
     <div class="form-group">
         <label for="et">1/8 Mile Elapsed Time (seconds):</label>
@@ -372,7 +381,7 @@
 </div>  
 
   <div class="bordered-container highlight-border">
-    <h2>Weather Stats</h2>
+    <h2 style="color: #00ffcc; border-bottom-color: #00ffcc; margin-top: 0;">Weather Stats</h2>
     
     <div class="mode-toggle">
         <span id="autoLabel" style="color: #28a745; font-size: 13px; font-weight: bold;">Auto Fill</span>
