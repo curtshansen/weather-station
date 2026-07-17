@@ -273,7 +273,7 @@
 
 <!-- NEW CAR MANAGEMENT SECTION -->
 <div class="bordered-container" style="border-color: #ff4500; padding-bottom: 15px;">
-    <h2 style="color: #ff4500; border-bottom-color: #ff4500; margin-top: 0;">Garage Profiles</h2>
+    <h2 style="color: #ff4500; border-bottom-color: #ff4500; margin-top: 0;">Car Profiles</h2>
     <div class="car-controls">
         <select id="carSelect" onchange="changeCar()" style="flex: 3;"></select>
         <button class="btn-add" onclick="addCar()">+ Add</button>
@@ -283,9 +283,15 @@
 
 <div class="container" style="border: 2px solid #00ffcc; padding: 20px; margin-bottom: 20px;">
     <h2 style="color: #00ffcc; border-bottom-color: #00ffcc; margin-top: 0;">ET Predictor</h2>
-  <div id="status" class="status">Status: Connecting to Weather Data...</div>
-      <div id="last-update" style="font-size: .9rem; color: #aaa; margin-bottom: 15px; font-style: normal; text-align: center;">Last time data received: --</div>
-      <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
+    <div id="status" class="status">Status: Connecting to Weather Data...</div>
+    <div id="last-update" style="font-size: .9rem; color: #aaa; margin-bottom: 15px; font-style: normal; text-align: center;">Last time data received: --</div>
+    <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
+    
+    <!-- NEW BASE RUN DROPDOWN SELECTOR -->
+    <div class="form-group" style="margin-bottom: 15px;">
+        <label for="baseRunSelect">Selected Base Run Log:</label>
+        <select id="baseRunSelect" onchange="changeBaseRun()"></select>
+    </div>
     
     <div class="dashboard prediction-dashboard" style="margin-bottom: 5px;">
         <div class="card predict-card">
@@ -299,13 +305,14 @@
     </div>
     
     <div class="button-group">
-        <button onclick="lockBaseRun()" style="background-color: #28a745; flex: 2;">Lock Base Run</button>
-        <button onclick="clearBaseRun()" style="background-color: #dc3545; flex: 1;">Clear Base</button>
+        <button onclick="lockBaseRun()" style="background-color: #28a745; flex: 2; font-size: 13px; padding: 12px 6px;">Lock Base Run</button>
+        <button onclick="saveBaseRun()" style="background-color: #007bff; flex: 2; font-size: 13px; padding: 12px 6px;">Save Base Run</button>
+        <button onclick="clearBaseRun()" style="background-color: #dc3545; flex: 1.5; font-size: 13px; padding: 12px 6px;">Delete Base</button>
     </div>
 </div>
 
 <div class="bordered-container highlight-border">
-    <h2>Drag Race Inputs</h2>
+    <h2>Base Run Inputs</h2>
     
     <div class="form-group">
         <label for="et">1/8 Mile Elapsed Time (seconds):</label>
@@ -470,7 +477,7 @@ function initCars() {
     // 2. Migration: If no garage exists, but old single-car data does, port it over safely
     if (Object.keys(carsData).length === 0) {
         const legacyWeight = localStorage.getItem('drag_calc_m_weight');
-        carsData = { "Default Car": { inputs: {...defaults}, baseRun: { isLocked: false } } };
+        carsData = { "Default Car": { inputs: {...defaults}, baseRun: { isLocked: false }, baseRuns: [], activeBaseRunId: "" } };
         
         if (legacyWeight) {
             carsData["Default Car"].inputs = {
@@ -483,11 +490,30 @@ function initCars() {
             };
             const legacyBase = localStorage.getItem('drag_calc_baseRun');
             if (legacyBase) {
-                try { carsData["Default Car"].baseRun = JSON.parse(legacyBase); } catch(e){}
+                try { 
+                    const oldBase = JSON.parse(legacyBase);
+                    carsData["Default Car"].baseRun = oldBase;
+                } catch(e){}
             }
             // Wipe legacy keys so they don't sit unused
             ['weight','et','mph','area','windSpeed','da'].forEach(k => localStorage.removeItem('drag_calc_m_'+k));
             localStorage.removeItem('drag_calc_baseRun');
+        }
+    }
+    
+    // Backwards Compatibility Scan: Ensure all existing cars have base run structural logic
+    for (let name in carsData) {
+        if (!carsData[name].baseRuns) {
+            carsData[name].baseRuns = [];
+        }
+        if (carsData[name].activeBaseRunId === undefined) {
+            if (carsData[name].baseRun && carsData[name].baseRun.isLocked) {
+                carsData[name].activeBaseRunId = "temp";
+            } else if (carsData[name].baseRuns.length > 0) {
+                carsData[name].activeBaseRunId = carsData[name].baseRuns[0].id;
+            } else {
+                carsData[name].activeBaseRunId = "";
+            }
         }
     }
     
@@ -527,7 +553,7 @@ function addCar() {
         alert("A car with this name already exists.");
         return;
     }
-    carsData[name] = { inputs: {...defaults}, baseRun: { isLocked: false } };
+    carsData[name] = { inputs: {...defaults}, baseRun: { isLocked: false }, baseRuns: [], activeBaseRunId: "" };
     currentCarName = name;
     
     localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
@@ -557,6 +583,10 @@ function deleteCar() {
 function loadCarData() {
     const car = carsData[currentCarName];
     
+    // Enforce arrays and structures inside target car
+    if (!car.baseRuns) car.baseRuns = [];
+    if (car.activeBaseRunId === undefined) car.activeBaseRunId = "";
+    
     // Load UI Inputs
     const fields = ['weight', 'et', 'mph', 'area', 'windSpeed', 'da'];
     fields.forEach(f => {
@@ -564,16 +594,9 @@ function loadCarData() {
         if (car.inputs[f] !== undefined) document.getElementById(f).value = car.inputs[f];
     });
     
-    // Load Base Run
-    baseRun = car.baseRun || { isLocked: false };
-    
-    if (!baseRun.isLocked) {
-        document.getElementById('resPredictedEt').innerText = "--";
-        document.getElementById('resEtDiff').innerText = "--";
-        document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
-    } else {
-        document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
-    }
+    // Refresh Dropdown View & State
+    updateBaseRunDropdown();
+    setActiveBaseRunFromId();
     
     calculateHorsepower();
 }
@@ -587,6 +610,136 @@ function resetToDefaults() {
     carsData[currentCarName].inputs = {...defaults};
     localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
     loadCarData(); // Resets UI and recalculates
+}
+
+// ================= BASE RUN MANAGEMENT EXTENSIONS =================
+function updateBaseRunDropdown() {
+    const select = document.getElementById('baseRunSelect');
+    select.innerHTML = '';
+    
+    const car = carsData[currentCarName];
+    
+    if (car.baseRuns.length === 0 && (!car.baseRun || !car.baseRun.isLocked)) {
+        const opt = document.createElement('option');
+        opt.value = "";
+        opt.textContent = "No Base Runs Saved";
+        select.appendChild(opt);
+        return;
+    }
+    
+    // Show temporary mock if it exists
+    if (car.baseRun && car.baseRun.isLocked) {
+        const opt = document.createElement('option');
+        opt.value = "temp";
+        opt.textContent = `[Temp Base] ${car.baseRun.et}s @ ${Math.round(car.baseRun.da)} DA`;
+        if (car.activeBaseRunId === "temp") opt.selected = true;
+        select.appendChild(opt);
+    }
+    
+    // Show saved profile entries
+    car.baseRuns.forEach(run => {
+        const opt = document.createElement('option');
+        opt.value = run.id;
+        opt.textContent = run.label || `${run.timestamp} (${run.et}s)`;
+        if (run.id === car.activeBaseRunId) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
+function changeBaseRun() {
+    const id = document.getElementById('baseRunSelect').value;
+    carsData[currentCarName].activeBaseRunId = id;
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    
+    setActiveBaseRunFromId();
+    calculateHorsepower();
+}
+
+function setActiveBaseRunFromId() {
+    const car = carsData[currentCarName];
+    
+    if (car.activeBaseRunId === "temp" && car.baseRun && car.baseRun.isLocked) {
+        baseRun = car.baseRun;
+    } else if (car.activeBaseRunId && car.baseRuns) {
+        const found = car.baseRuns.find(r => r.id === car.activeBaseRunId);
+        if (found) {
+            baseRun = found;
+        } else {
+            baseRun = { isLocked: false };
+            car.activeBaseRunId = "";
+        }
+    } else {
+        baseRun = { isLocked: false };
+        car.activeBaseRunId = "";
+    }
+    
+    // Update labels globally based on resolution
+    if (!baseRun.isLocked) {
+        document.getElementById('resPredictedEt').innerText = "--";
+        document.getElementById('resEtDiff').innerText = "--";
+        document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+    } else {
+        const typePrefix = car.activeBaseRunId === "temp" ? "Temp" : "Saved";
+        document.getElementById('baseRunStatus').innerText = `Locked [${typePrefix}]: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
+    }
+}
+
+function saveBaseRun() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+
+    if (isNaN(weight) || isNaN(et) || isNaN(mph)) {
+        alert("Please confirm inputs are valid before logging data profiles.");
+        return;
+    }
+
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio;
+    
+    let relativeAirSpeedMph = mph + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = mph * 1.46667;
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * 0.45 * area;
+    const avgAeroHp = (peakDragForce * carSpeedFps) / 550 / 3;
+    const totalHp = mechanicalHp + avgAeroHp;
+
+    const uniqueId = 'run_' + Date.now();
+    const now = new Date();
+    const timestamp = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+    const newRun = {
+        id: uniqueId,
+        isLocked: true,
+        timestamp: timestamp,
+        weight: weight,
+        et: et,
+        mph: mph,
+        area: area,
+        windSpeed: windSpeed,
+        da: da,
+        airDensity: airDensity,
+        invAvg: windowGlobalInvAvg,
+        totalHp: totalHp,
+        label: `${timestamp} (${et.toFixed(3)}s @ ${Math.round(da)} DA)`
+    };
+
+    const car = carsData[currentCarName];
+    car.baseRuns.push(newRun);
+    car.activeBaseRunId = uniqueId;
+    
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    
+    updateBaseRunDropdown();
+    setActiveBaseRunFromId();
+    calculateHorsepower();
 }
 
 // ================= TELEMETRY & MODE TOGGLE =================
@@ -761,26 +914,48 @@ function lockBaseRun() {
         totalHp: totalHp
     };
 
-    // Save to the specific car profile
+    // Save to the specific car profile as a quick temp target
     carsData[currentCarName].baseRun = baseRun;
+    carsData[currentCarName].activeBaseRunId = "temp";
     localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
     
+    updateBaseRunDropdown();
+    setActiveBaseRunFromId();
     calculateHorsepower(); 
 }
 
 function clearBaseRun() {
-    baseRun = { isLocked: false };
-    carsData[currentCarName].baseRun = baseRun;
-    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    const car = carsData[currentCarName];
     
-    document.getElementById('resPredictedEt').innerText = "--";
-    document.getElementById('resEtDiff').innerText = "--";
-    document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+    // Check if we are deleting an archived entry from log
+    if (car.activeBaseRunId && car.activeBaseRunId !== "temp") {
+        if (confirm("Are you sure you want to delete this saved base run from the log history?")) {
+            car.baseRuns = car.baseRuns.filter(r => r.id !== car.activeBaseRunId);
+            car.activeBaseRunId = car.baseRuns.length > 0 ? car.baseRuns[0].id : "";
+            
+            localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+            updateBaseRunDropdown();
+            setActiveBaseRunFromId();
+            calculateHorsepower();
+        }
+    } else {
+        // Clear ad-hoc/temporary profile entry
+        baseRun = { isLocked: false };
+        car.baseRun = baseRun;
+        car.activeBaseRunId = "";
+        localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+        
+        document.getElementById('resPredictedEt').innerText = "--";
+        document.getElementById('resEtDiff').innerText = "--";
+        document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+        updateBaseRunDropdown();
+    }
 }
 
 function predictPerformance(currentAirDensity) {
     if (!baseRun.isLocked) {
-        clearBaseRun(); 
+        document.getElementById('resPredictedEt').innerText = "--";
+        document.getElementById('resEtDiff').innerText = "--";
         return;
     }
 
@@ -831,8 +1006,6 @@ function predictPerformance(currentAirDensity) {
     
     elDiff.innerText = `${sign}${etDifference.toFixed(4)}`;
     elDiff.style.color = highlightColor;
-
-    document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
 }
 
 function calculateHorsepower() {
@@ -886,4 +1059,3 @@ window.onload = function() {
 </script>
 </body>
 </html>
-
