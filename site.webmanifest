@@ -3,13 +3,13 @@
   "short_name": "ETP",
   "icons": [
     {
-      "src": "/http://108.53.173.115:8080/favicon.ico/web-app-manifest-192x192.png",
+      "src": "/https://curtshansen.github.io/weather-station/ws-etpredict-multiple-cars.html/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/http://108.53.173.115:8080/favicon.ico/web-app-manifest-512x512.png",
+      "src": "/https://curtshansen.github.io/weather-station/ws-etpredict-multiple-cars.html/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
