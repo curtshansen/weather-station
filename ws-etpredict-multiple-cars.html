@@ -797,7 +797,6 @@ function manualCalculate() {
         calculateAdvancedMetrics(t, bp, sh);
     }
 }
-
 async function fetchLiveTelemetry() {
     if (isManualMode) return; 
 
@@ -813,21 +812,38 @@ async function fetchLiveTelemetry() {
         if (!response.ok) throw new Error(`Data fetch error: ${response.status}`);
         const data = await response.json();
 
+        // 1. CAPTURE CURRENT TIME FOR THE "LAST SYNC" COMPARISON
+        const now = new Date();
+
         if (data.avg_temp && data.avg_temp.length > 0 && data.bp && data.bp.length > 0 && data.sh && data.sh.length > 0) {
             const T_f = parseFloat(data.avg_temp[0].value);
             const P_inHg = parseFloat(data.bp[0].value);
             const RH = parseFloat(data.sh[0].value);
+            
+            // 2. EXTRACT SERVER PACKET TIMESTAMP
             const serverTimeMs = data.avg_temp[0].ts;
             const dataDate = new Date(serverTimeMs);
             
             document.getElementById('temp-val').value = T_f.toFixed(2);
             document.getElementById('bp-val').value = P_inHg.toFixed(2);
             document.getElementById('sh-val').value = RH.toFixed(1);
-            document.getElementById('last-update').innerText = `Last data packet: ${dataDate.toLocaleDateString()} at ${dataDate.toLocaleTimeString()}`;
+            
+            const lastUpdateText = document.getElementById('last-update');
+            lastUpdateText.innerText = `Last data packet: ${dataDate.toLocaleDateString()} at ${dataDate.toLocaleTimeString()}`;
+
+            // 3. NEW THRESHOLD CHECK: COMPARE PACKET AGE TO LAST SYNC TIME
+            const executionDifferenceMinutes = (now.getTime() - serverTimeMs) / 60000;
+            if (executionDifferenceMinutes > 5) {
+                lastUpdateText.style.color = "#dc3545"; // Red if older than 5 minutes
+            } else {
+                lastUpdateText.style.color = "#28a745"; // Green if within 5 minutes
+            }
 
             calculateAdvancedMetrics(T_f, P_inHg, RH);
         }
-        document.getElementById('status').innerText = `Status: Last Sync: ${new Date().toLocaleTimeString()}`;
+        
+        // 4. UPDATE STATUS WITH THE LAST SYNC TIME
+        document.getElementById('status').innerText = `Status: Last Sync: ${now.toLocaleTimeString()}`;
         document.getElementById('status').style.color = "#28a745";
     } catch (error) {
         console.error("Telemetry error:", error);
@@ -835,6 +851,43 @@ async function fetchLiveTelemetry() {
         document.getElementById('status').style.color = "#dc3545";
     }
 }
+// async function fetchLiveTelemetry() {
+//     if (isManualMode) return; 
+
+//     const url = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=avg_temp,bp,sh`;
+//     try {
+//         const response = await fetch(url, {
+//             method: 'GET',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-Authorization': `ApiKey ${API_KEY}`
+//             }
+//         });
+//         if (!response.ok) throw new Error(`Data fetch error: ${response.status}`);
+//         const data = await response.json();
+
+//         if (data.avg_temp && data.avg_temp.length > 0 && data.bp && data.bp.length > 0 && data.sh && data.sh.length > 0) {
+//             const T_f = parseFloat(data.avg_temp[0].value);
+//             const P_inHg = parseFloat(data.bp[0].value);
+//             const RH = parseFloat(data.sh[0].value);
+//             const serverTimeMs = data.avg_temp[0].ts;
+//             const dataDate = new Date(serverTimeMs);
+            
+//             document.getElementById('temp-val').value = T_f.toFixed(2);
+//             document.getElementById('bp-val').value = P_inHg.toFixed(2);
+//             document.getElementById('sh-val').value = RH.toFixed(1);
+//             document.getElementById('last-update').innerText = `Last data packet: ${dataDate.toLocaleDateString()} at ${dataDate.toLocaleTimeString()}`;
+
+//             calculateAdvancedMetrics(T_f, P_inHg, RH);
+//         }
+//         document.getElementById('status').innerText = `Status: Last Sync: ${new Date().toLocaleTimeString()}`;
+//         document.getElementById('status').style.color = "#28a745";
+//     } catch (error) {
+//         console.error("Telemetry error:", error);
+//         document.getElementById('status').innerText = "Status: Connection Error reading telemetry.";
+//         document.getElementById('status').style.color = "#dc3545";
+//     }
+// }
 
 function calculateAdvancedMetrics(T_f, P_inHg, RH) {
     const T_c = (T_f - 32) * 5 / 9;
