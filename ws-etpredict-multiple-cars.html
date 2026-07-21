@@ -788,7 +788,12 @@ function toggleMode() {
 }
 
 function manualCalculate() {
-    if (!isManualMode) return;
+    // Look at the temp input to see if fields are dynamically unlocked
+    const tempInput = document.getElementById('temp-val');
+    
+    // Abort ONLY if the manual switch is off AND the fields are locked
+    if (!isManualMode && tempInput.readOnly) return; 
+
     const t = parseFloat(document.getElementById('temp-val').value);
     const bp = parseFloat(document.getElementById('bp-val').value);
     const sh = parseFloat(document.getElementById('sh-val').value);
@@ -796,7 +801,19 @@ function manualCalculate() {
     if (!isNaN(t) && !isNaN(bp) && !isNaN(sh)) {
         calculateAdvancedMetrics(t, bp, sh);
     }
-}
+}    
+    
+
+// function manualCalculate() {
+//     if (!isManualMode) return;
+//     const t = parseFloat(document.getElementById('temp-val').value);
+//     const bp = parseFloat(document.getElementById('bp-val').value);
+//     const sh = parseFloat(document.getElementById('sh-val').value);
+
+//     if (!isNaN(t) && !isNaN(bp) && !isNaN(sh)) {
+//         calculateAdvancedMetrics(t, bp, sh);
+//     }
+// }
 
 async function fetchLiveTelemetry() {
     if (isManualMode) return; 
@@ -825,29 +842,45 @@ async function fetchLiveTelemetry() {
             const serverTimeMs = data.avg_temp[0].ts;
             const dataDate = new Date(serverTimeMs);
             
-            document.getElementById('temp-val').value = T_f.toFixed(2);
-            document.getElementById('bp-val').value = P_inHg.toFixed(2);
-            document.getElementById('sh-val').value = RH.toFixed(1);
-            
             const lastUpdateText = document.getElementById('last-update');
             lastUpdateText.innerText = `Last data packet: ${dataDate.toLocaleDateString()} at ${dataDate.toLocaleTimeString()}`;
 
-            // 3. NEW THRESHOLD CHECK: COMPARE PACKET AGE TO LAST SYNC TIME
+            // 3. THRESHOLD CHECK
             const executionDifferenceMinutes = (now.getTime() - serverTimeMs) / 60000;
+            const inputs = document.querySelectorAll('.telemetry-input');
+
             if (executionDifferenceMinutes > 5) {
                 lastUpdateText.style.color = "#dc3545"; // Red if older than 5 minutes
                 
-                // AUTOMATICALLY SWITCH TO MANUAL MODE
-                const modeToggle = document.getElementById('modeToggle');
-                if (!modeToggle.checked) {
-                    modeToggle.checked = true; // Visually flip the switch
-                    toggleMode();              // Trigger your existing mode toggle logic
+                // Unlock fields so the user can manually type in them
+                inputs.forEach(input => {
+                    input.readOnly = false;
+                    input.classList.add('editable');
+                });
+
+                // ONLY populate fields with stale data if they are still at their default "0" (initial load).
+                // Otherwise, leave them alone so we don't overwrite the user's manual typing every 10 seconds.
+                if (document.getElementById('temp-val').value === "0" && document.getElementById('bp-val').value === "0") {
+                    document.getElementById('temp-val').value = T_f.toFixed(2);
+                    document.getElementById('bp-val').value = P_inHg.toFixed(2);
+                    document.getElementById('sh-val').value = RH.toFixed(1);
+                    calculateAdvancedMetrics(T_f, P_inHg, RH);
                 }
             } else {
                 lastUpdateText.style.color = "#28a745"; // Green if within 5 minutes
-            }
+                
+                // Lock fields back down and update them with fresh data
+                inputs.forEach(input => {
+                    input.readOnly = true;
+                    input.classList.remove('editable');
+                });
 
-            calculateAdvancedMetrics(T_f, P_inHg, RH);
+                document.getElementById('temp-val').value = T_f.toFixed(2);
+                document.getElementById('bp-val').value = P_inHg.toFixed(2);
+                document.getElementById('sh-val').value = RH.toFixed(1);
+                
+                calculateAdvancedMetrics(T_f, P_inHg, RH);
+            }
         }
         
         // 4. UPDATE STATUS WITH THE LAST SYNC TIME
@@ -858,7 +891,7 @@ async function fetchLiveTelemetry() {
         document.getElementById('status').innerText = "Status: Connection Error reading telemetry.";
         document.getElementById('status').style.color = "#dc3545";
     }
-}    
+} 
 // commented out 7-21-2026    
 // async function fetchLiveTelemetry() {
 //     if (isManualMode) return; 
