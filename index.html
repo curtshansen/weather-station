@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <!-- <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <link rel="manifest" href="manifest.json"> -->
+    <!-- Link to your iPhone home screen icon -->
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    
+    <!-- Tells iOS to run your site in borderless fullscreen web-app mode -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Sets the app name on the iOS home screen -->
+    <meta name="apple-mobile-web-app-title" content="ET Predictor">
+    
+    <!-- Blends the top status bar (battery/time) into your dark background -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" >
     <link rel="icon" type="image/svg+xml" href="favicon.svg" >
@@ -25,6 +36,8 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            /* Automatically adds safe padding on modern iPhones with notches */
+            padding-top: env(safe-area-inset-top, 20px); 
         }
         .container {
             background-color: #1e1e1e;
