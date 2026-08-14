@@ -288,9 +288,17 @@
     <div id="last-update" style="font-size: .9rem; color: #aaa; margin-bottom: 15px; font-style: normal; text-align: center;">Last time data received: --</div>
     <div id="baseRunStatus" style="text-align: center; color: #b0b0b0; font-size: 13px; margin-bottom: 15px;">No Base Run Locked</div>
     
-    <div class="form-group" style="margin-bottom: 15px;">
+    <!-- <div class="form-group" style="margin-bottom: 15px;">
         <label style="color: #03fc45;" for="baseRunSelect">Selected Base Run Log:</label>
         <select style="color: #03fc45;" id="baseRunSelect" onchange="changeBaseRun()"></select>
+    </div> -->
+
+  <div class="form-group" style="margin-bottom: 15px;">
+        <label style="color: #03fc45;" for="baseRunSelect">Selected Base Run Log:</label>
+        <div style="display: flex; gap: 8px;">
+            <select style="color: #03fc45; flex: 1;" id="baseRunSelect" onchange="changeBaseRun()"></select>
+            <button onclick="editBaseRunName()" style="background-color: #6c757d; width: auto; padding: 0 12px; font-size: 13px; border-radius: 8px;">Edit Name</button>
+        </div>
     </div>
     
     <div class="dashboard prediction-dashboard" style="margin-bottom: 5px; grid-template-columns: 6fr 4fr !important;">
@@ -347,7 +355,7 @@
     <div class="form-group">
         <label for="windSpeed">Wind Speed (MPH):</label>
         <input type="text" inputmode="text" id="windSpeed" value="0">
-        <span class="help-text">Type a minus (-) sign first for a tailwind. This value will auto-update if the new weather station is connected.</span>
+        <span class="help-text">Type a minus (-) sign first for a tailwind. This value will auto-update if the Mini-C6AG weather station is connected.</span>
     </div>
   
     <div class="form-group">
@@ -476,7 +484,742 @@ const DEVICE_ID_NEW = "43031540-8541-11f1-bb5b-f59caa77e86d";
 
 const POLL_INTERVAL = 10000;
 
-const _0x40ebd3=_0x310e;(function(_0x73394f,_0x3d9304){const _0x5b1633=_0x310e,_0x29d6ae=_0x73394f();while(!![]){try{const _0x2b5c31=-parseInt(_0x5b1633(0x116))/0x1*(parseInt(_0x5b1633(0x183))/0x2)+-parseInt(_0x5b1633(0x166))/0x3*(-parseInt(_0x5b1633(0x189))/0x4)+parseInt(_0x5b1633(0x195))/0x5*(-parseInt(_0x5b1633(0x119))/0x6)+-parseInt(_0x5b1633(0x14e))/0x7*(parseInt(_0x5b1633(0x113))/0x8)+parseInt(_0x5b1633(0x143))/0x9+-parseInt(_0x5b1633(0x14b))/0xa+parseInt(_0x5b1633(0x163))/0xb*(parseInt(_0x5b1633(0x13b))/0xc);if(_0x2b5c31===_0x3d9304)break;else _0x29d6ae['push'](_0x29d6ae['shift']());}catch(_0x362265){_0x29d6ae['push'](_0x29d6ae['shift']());}}}(_0xe77c,0x9ee5a));let windowGlobalInvAvg=0x1,baseRun={'isLocked':![]},isManualMode=![],hasReceivedTelemetryDa=![];const defaults={'weight':'2000','et':_0x40ebd3(0x16b),'mph':'143.4','area':'15','windSpeed':'0','da':_0x40ebd3(0x10b)};let carsData={},currentCarName='';function initCars(){const _0x1e1d98=_0x40ebd3,_0x4b62e8=localStorage['getItem'](_0x1e1d98(0x117));if(_0x4b62e8)try{carsData=JSON[_0x1e1d98(0x145)](_0x4b62e8);}catch(_0x2a5295){carsData={};}if(Object[_0x1e1d98(0x167)](carsData)[_0x1e1d98(0x130)]===0x0){const _0x1a8a32=localStorage['getItem'](_0x1e1d98(0x182));carsData={'Default\x20Car':{'inputs':{...defaults},'baseRun':{'isLocked':![]},'baseRuns':[],'activeBaseRunId':''}};if(_0x1a8a32){carsData['Default\x20Car']['inputs']={'weight':_0x1a8a32,'et':localStorage[_0x1e1d98(0x16c)](_0x1e1d98(0x11c))||defaults['et'],'mph':localStorage['getItem'](_0x1e1d98(0x10c))||defaults[_0x1e1d98(0x18b)],'area':localStorage[_0x1e1d98(0x16c)](_0x1e1d98(0x11a))||defaults[_0x1e1d98(0x154)],'windSpeed':localStorage['getItem'](_0x1e1d98(0x146))||defaults[_0x1e1d98(0x115)],'da':localStorage[_0x1e1d98(0x16c)](_0x1e1d98(0x153))||defaults['da']};const _0x3a2f8f=localStorage['getItem'](_0x1e1d98(0x194));if(_0x3a2f8f)try{const _0x24d9e4=JSON[_0x1e1d98(0x145)](_0x3a2f8f);carsData['Default\x20Car'][_0x1e1d98(0x147)]=_0x24d9e4;}catch(_0xc16064){}['weight','et',_0x1e1d98(0x18b),'area','windSpeed','da'][_0x1e1d98(0x161)](_0x554686=>localStorage[_0x1e1d98(0x180)](_0x1e1d98(0x16d)+_0x554686)),localStorage[_0x1e1d98(0x180)]('drag_calc_baseRun');}}for(let _0x8f1229 in carsData){if(!carsData[_0x8f1229][_0x1e1d98(0x150)])carsData[_0x8f1229][_0x1e1d98(0x150)]=[];if(carsData[_0x8f1229][_0x1e1d98(0x164)]===undefined){if(carsData[_0x8f1229][_0x1e1d98(0x147)]&&carsData[_0x8f1229][_0x1e1d98(0x147)]['isLocked'])carsData[_0x8f1229]['activeBaseRunId']=_0x1e1d98(0x125);else carsData[_0x8f1229][_0x1e1d98(0x150)][_0x1e1d98(0x130)]>0x0?carsData[_0x8f1229][_0x1e1d98(0x164)]=carsData[_0x8f1229][_0x1e1d98(0x150)][0x0]['id']:carsData[_0x8f1229][_0x1e1d98(0x164)]='';}}const _0x3a7c81=localStorage[_0x1e1d98(0x16c)](_0x1e1d98(0x11b));_0x3a7c81&&carsData[_0x3a7c81]?currentCarName=_0x3a7c81:currentCarName=Object['keys'](carsData)[0x0],updateCarDropdown();}function updateCarDropdown(){const _0x442a85=_0x40ebd3,_0x16db8e=document['getElementById'](_0x442a85(0x14f));_0x16db8e[_0x442a85(0x114)]='';for(let _0x5adf9f in carsData){const _0x1454dc=document['createElement'](_0x442a85(0x17a));_0x1454dc[_0x442a85(0x188)]=_0x5adf9f,_0x1454dc[_0x442a85(0x177)]=_0x5adf9f;if(_0x5adf9f===currentCarName)_0x1454dc['selected']=!![];_0x16db8e[_0x442a85(0x118)](_0x1454dc);}}function changeCar(){const _0xde8a85=_0x40ebd3;currentCarName=document[_0xde8a85(0x133)](_0xde8a85(0x14f))['value'],localStorage['setItem'](_0xde8a85(0x11b),currentCarName),loadCarData();}function addCar(){const _0x2cbda2=_0x40ebd3,_0x32bee4=prompt(_0x2cbda2(0x111));if(!_0x32bee4||_0x32bee4[_0x2cbda2(0x127)]()==='')return;if(carsData[_0x32bee4]){alert(_0x2cbda2(0x10d));return;}carsData[_0x32bee4]={'inputs':{...defaults},'baseRun':{'isLocked':![]},'baseRuns':[],'activeBaseRunId':''},currentCarName=_0x32bee4,localStorage[_0x2cbda2(0x131)]('drag_calc_carsData',JSON['stringify'](carsData)),localStorage[_0x2cbda2(0x131)]('drag_calc_currentCar',currentCarName),updateCarDropdown(),loadCarData();}function _0x310e(_0x2e8abe,_0x5a49bd){_0x2e8abe=_0x2e8abe-0x108;const _0xe77c0c=_0xe77c();let _0x310e6f=_0xe77c0c[_0x2e8abe];return _0x310e6f;}function deleteCar(){const _0x49afc7=_0x40ebd3;if(Object['keys'](carsData)[_0x49afc7(0x130)]<=0x1){alert('You\x20must\x20have\x20at\x20least\x20one\x20profile\x20in\x20your\x20garage.');return;}confirm('Are\x20you\x20sure\x20you\x20want\x20to\x20delete\x20profile:\x20\x22'+currentCarName+'\x22?')&&(delete carsData[currentCarName],currentCarName=Object[_0x49afc7(0x167)](carsData)[0x0],localStorage[_0x49afc7(0x131)](_0x49afc7(0x117),JSON[_0x49afc7(0x137)](carsData)),localStorage[_0x49afc7(0x131)]('drag_calc_currentCar',currentCarName),updateCarDropdown(),loadCarData());}function loadCarData(){const _0x298339=_0x40ebd3,_0x5628e8=carsData[currentCarName];if(!_0x5628e8[_0x298339(0x150)])_0x5628e8[_0x298339(0x150)]=[];if(_0x5628e8[_0x298339(0x164)]===undefined)_0x5628e8[_0x298339(0x164)]='';const _0x14b3c5=[_0x298339(0x18d),'et',_0x298339(0x18b),_0x298339(0x154),_0x298339(0x115),'da'];_0x14b3c5[_0x298339(0x161)](_0x51f203=>{const _0x4f0b39=_0x298339;if(_0x51f203==='da'&&hasReceivedTelemetryDa)return;if(_0x5628e8['inputs'][_0x51f203]!==undefined)document[_0x4f0b39(0x133)](_0x51f203)['value']=_0x5628e8[_0x4f0b39(0x16e)][_0x51f203];}),updateBaseRunDropdown(),setActiveBaseRunFromId(),calculateHorsepower();}function saveCurrentInputs(_0x330d0a,_0x5c60ff,_0xde8be6,_0x454746,_0x3f18a4,_0x2d27c5){const _0x335e87=_0x40ebd3;carsData[currentCarName][_0x335e87(0x16e)]={'weight':_0x330d0a,'et':_0x5c60ff,'mph':_0xde8be6,'area':_0x454746,'windSpeed':_0x3f18a4,'da':_0x2d27c5},localStorage[_0x335e87(0x131)]('drag_calc_carsData',JSON[_0x335e87(0x137)](carsData));}function resetToDefaults(){const _0x4e6b98=_0x40ebd3;carsData[currentCarName][_0x4e6b98(0x16e)]={...defaults},localStorage[_0x4e6b98(0x131)](_0x4e6b98(0x117),JSON[_0x4e6b98(0x137)](carsData)),loadCarData();}function updateBaseRunDropdown(){const _0x3d2acd=_0x40ebd3,_0x443a8a=document[_0x3d2acd(0x133)](_0x3d2acd(0x134));_0x443a8a[_0x3d2acd(0x114)]='';const _0x59c917=carsData[currentCarName];if(_0x59c917['baseRuns'][_0x3d2acd(0x130)]===0x0&&(!_0x59c917['baseRun']||!_0x59c917[_0x3d2acd(0x147)][_0x3d2acd(0x10f)])){const _0x3cf32a=document['createElement']('option');_0x3cf32a['value']='',_0x3cf32a[_0x3d2acd(0x177)]=_0x3d2acd(0x11e),_0x443a8a[_0x3d2acd(0x118)](_0x3cf32a);return;}if(_0x59c917[_0x3d2acd(0x147)]&&_0x59c917[_0x3d2acd(0x147)][_0x3d2acd(0x10f)]){const _0x2bdf37=document[_0x3d2acd(0x165)](_0x3d2acd(0x17a));_0x2bdf37[_0x3d2acd(0x188)]=_0x3d2acd(0x125),_0x2bdf37['textContent']='[Temp\x20Base]\x20'+_0x59c917[_0x3d2acd(0x147)]['et']+_0x3d2acd(0x160)+Math['round'](_0x59c917['baseRun']['da'])+_0x3d2acd(0x12c);if(_0x59c917[_0x3d2acd(0x164)]===_0x3d2acd(0x125))_0x2bdf37[_0x3d2acd(0x140)]=!![];_0x443a8a[_0x3d2acd(0x118)](_0x2bdf37);}_0x59c917[_0x3d2acd(0x150)][_0x3d2acd(0x161)](_0x255587=>{const _0x106801=_0x3d2acd,_0x30bc74=document[_0x106801(0x165)](_0x106801(0x17a));_0x30bc74[_0x106801(0x188)]=_0x255587['id'],_0x30bc74[_0x106801(0x177)]=_0x255587[_0x106801(0x13f)]||_0x255587['timestamp']+'\x20('+_0x255587['et']+'s)';if(_0x255587['id']===_0x59c917[_0x106801(0x164)])_0x30bc74[_0x106801(0x140)]=!![];_0x443a8a['appendChild'](_0x30bc74);});}function changeBaseRun(){const _0x1abc96=_0x40ebd3,_0x417229=document[_0x1abc96(0x133)](_0x1abc96(0x134))['value'];carsData[currentCarName][_0x1abc96(0x164)]=_0x417229,localStorage[_0x1abc96(0x131)](_0x1abc96(0x117),JSON['stringify'](carsData)),setActiveBaseRunFromId(),calculateHorsepower();}function setActiveBaseRunFromId(){const _0x30f53b=_0x40ebd3,_0xe4d42d=carsData[currentCarName];if(_0xe4d42d[_0x30f53b(0x164)]===_0x30f53b(0x125)&&_0xe4d42d[_0x30f53b(0x147)]&&_0xe4d42d[_0x30f53b(0x147)][_0x30f53b(0x10f)])baseRun=_0xe4d42d[_0x30f53b(0x147)];else{if(_0xe4d42d[_0x30f53b(0x164)]&&_0xe4d42d[_0x30f53b(0x150)]){const _0x2949f2=_0xe4d42d[_0x30f53b(0x150)][_0x30f53b(0x144)](_0xffd850=>_0xffd850['id']===_0xe4d42d[_0x30f53b(0x164)]);_0x2949f2?baseRun=_0x2949f2:(baseRun={'isLocked':![]},_0xe4d42d['activeBaseRunId']='');}else baseRun={'isLocked':![]},_0xe4d42d['activeBaseRunId']='';}if(!baseRun[_0x30f53b(0x10f)])document['getElementById']('resPredictedEt')[_0x30f53b(0x18f)]='--',document[_0x30f53b(0x133)](_0x30f53b(0x15c))[_0x30f53b(0x18f)]='--',document[_0x30f53b(0x133)](_0x30f53b(0x14c))[_0x30f53b(0x18f)]=_0x30f53b(0x191);else{const _0x4513a2=_0xe4d42d[_0x30f53b(0x164)]===_0x30f53b(0x125)?_0x30f53b(0x181):'Saved';document[_0x30f53b(0x133)]('baseRunStatus')[_0x30f53b(0x18f)]=_0x30f53b(0x128)+_0x4513a2+']:\x20'+baseRun['et']+'s\x20/\x20'+baseRun[_0x30f53b(0x18d)]+'\x20lbs\x20/\x20'+baseRun[_0x30f53b(0x115)]+_0x30f53b(0x156)+baseRun['da']+_0x30f53b(0x12c);}}function saveBaseRun(){const _0x1b39cb=_0x40ebd3,_0x27d6c0=parseFloat(document[_0x1b39cb(0x133)](_0x1b39cb(0x18d))[_0x1b39cb(0x188)]),_0x42d66d=parseFloat(document[_0x1b39cb(0x133)]('et')['value']),_0x294cd9=parseFloat(document[_0x1b39cb(0x133)](_0x1b39cb(0x18b))['value']),_0x158c22=parseFloat(document[_0x1b39cb(0x133)]('area')['value']),_0x3088bc=parseFloat(document[_0x1b39cb(0x133)](_0x1b39cb(0x115))[_0x1b39cb(0x188)]),_0x97ace5=parseFloat(document[_0x1b39cb(0x133)]('da')[_0x1b39cb(0x188)]);if(isNaN(_0x27d6c0)||isNaN(_0x42d66d)||isNaN(_0x294cd9)){alert('Please\x20confirm\x20inputs\x20are\x20valid\x20before\x20logging\x20data\x20profiles.');return;}const _0xb3abb7=_0x27d6c0/Math[_0x1b39cb(0x185)](_0x42d66d/3.7,0x3),_0x535309=0.0023769,_0x5275d7=Math[_0x1b39cb(0x185)](0x1-0.0000068756*_0x97ace5,4.25588),_0x35b6ca=_0x535309*_0x5275d7;let _0x27834d=_0x294cd9+_0x3088bc;if(_0x27834d<0x0)_0x27834d=0x0;const _0x3778cd=_0x27834d*1.46667,_0x277e7f=_0x294cd9*1.46667,_0x144d6b=0.5*_0x35b6ca*Math[_0x1b39cb(0x185)](_0x3778cd,0x2)*0.45*_0x158c22,_0x621af7=_0x144d6b*_0x277e7f/0x226/0x3,_0x10419d=_0xb3abb7+_0x621af7,_0xd5715b=_0x1b39cb(0x10e)+Date[_0x1b39cb(0x193)](),_0x395543=new Date(),_0x20b3eb=_0x395543[_0x1b39cb(0x110)]()+'\x20'+_0x395543[_0x1b39cb(0x139)]([],{'hour':_0x1b39cb(0x16a),'minute':_0x1b39cb(0x16a)}),_0x5faa71={'id':_0xd5715b,'isLocked':!![],'timestamp':_0x20b3eb,'weight':_0x27d6c0,'et':_0x42d66d,'mph':_0x294cd9,'area':_0x158c22,'windSpeed':_0x3088bc,'da':_0x97ace5,'airDensity':_0x35b6ca,'invAvg':windowGlobalInvAvg,'totalHp':_0x10419d,'label':_0x20b3eb+'\x20('+_0x42d66d[_0x1b39cb(0x135)](0x3)+'s\x20@\x20'+Math['round'](_0x97ace5)+_0x1b39cb(0x11f)},_0x2dfee9=carsData[currentCarName];_0x2dfee9[_0x1b39cb(0x150)][_0x1b39cb(0x17c)](_0x5faa71),_0x2dfee9['activeBaseRunId']=_0xd5715b,localStorage[_0x1b39cb(0x131)](_0x1b39cb(0x117),JSON[_0x1b39cb(0x137)](carsData)),updateBaseRunDropdown(),setActiveBaseRunFromId(),calculateHorsepower();}function toggleMode(){const _0x15c18f=_0x40ebd3;isManualMode=document[_0x15c18f(0x133)](_0x15c18f(0x187))[_0x15c18f(0x190)];const _0x16cd07=document['querySelectorAll'](_0x15c18f(0x18e)),_0x45b52a=document[_0x15c18f(0x133)]('autoLabel'),_0x238e18=document['getElementById'](_0x15c18f(0x196)),_0x2a7aab=document[_0x15c18f(0x133)](_0x15c18f(0x109)),_0x45bd7c=document[_0x15c18f(0x133)](_0x15c18f(0x15a));isManualMode?(_0x16cd07[_0x15c18f(0x161)](_0x2a4c42=>{const _0x1ac543=_0x15c18f;_0x2a4c42[_0x1ac543(0x129)]=![],_0x2a4c42['classList'][_0x1ac543(0x142)](_0x1ac543(0x15d));}),_0x45b52a['style'][_0x15c18f(0x148)]='#aaa',_0x238e18[_0x15c18f(0x136)][_0x15c18f(0x148)]=_0x15c18f(0x14a),_0x2a7aab[_0x15c18f(0x18f)]=_0x15c18f(0x186),_0x2a7aab[_0x15c18f(0x136)][_0x15c18f(0x148)]=_0x15c18f(0x14a),_0x45bd7c[_0x15c18f(0x18f)]=_0x15c18f(0x149),manualCalculate()):(_0x16cd07[_0x15c18f(0x161)](_0x27f371=>{const _0x4942c6=_0x15c18f;_0x27f371['readOnly']=!![],_0x27f371[_0x4942c6(0x12a)][_0x4942c6(0x174)](_0x4942c6(0x15d));}),_0x45b52a[_0x15c18f(0x136)][_0x15c18f(0x148)]=_0x15c18f(0x17f),_0x238e18[_0x15c18f(0x136)][_0x15c18f(0x148)]=_0x15c18f(0x151),_0x2a7aab[_0x15c18f(0x18f)]='Status:\x20Reconnecting\x20to\x20Weather\x20Data...',_0x2a7aab[_0x15c18f(0x136)]['color']=_0x15c18f(0x15e),fetchLiveTelemetry());}function manualCalculate(){const _0x2bb1b4=_0x40ebd3,_0x5acc03=document[_0x2bb1b4(0x133)](_0x2bb1b4(0x16f));if(!isManualMode&&_0x5acc03['readOnly'])return;const _0x3de3e5=parseFloat(document['getElementById'](_0x2bb1b4(0x16f))[_0x2bb1b4(0x188)]),_0x3ac604=parseFloat(document['getElementById']('bp-val')[_0x2bb1b4(0x188)]),_0x1f7da6=parseFloat(document[_0x2bb1b4(0x133)](_0x2bb1b4(0x17e))[_0x2bb1b4(0x188)]);!isNaN(_0x3de3e5)&&!isNaN(_0x3ac604)&&!isNaN(_0x1f7da6)&&calculateAdvancedMetrics(_0x3de3e5,_0x3ac604,_0x1f7da6);}async function fetchLiveTelemetry(){const _0xec0d8=_0x40ebd3;if(isManualMode)return;const _0x296e4a=_0xec0d8(0x197)+TB_HOST+_0xec0d8(0x121)+DEVICE_ID_OLD+'/values/timeseries?keys=avg_temp,bp,sh',_0x451096=_0xec0d8(0x197)+TB_HOST+_0xec0d8(0x121)+DEVICE_ID_NEW+_0xec0d8(0x14d);try{const [_0x4760dd,_0x10ea90]=await Promise['all']([fetch(_0x296e4a,{'headers':{'Content-Type':'application/json','X-Authorization':_0xec0d8(0x171)+API_KEY}})[_0xec0d8(0x172)](()=>null),fetch(_0x451096,{'headers':{'Content-Type':_0xec0d8(0x108),'X-Authorization':_0xec0d8(0x171)+API_KEY}})['catch'](()=>null)]),_0x607db5=_0x4760dd&&_0x4760dd['ok']?await _0x4760dd[_0xec0d8(0x17d)]():null,_0x46f9d0=_0x10ea90&&_0x10ea90['ok']?await _0x10ea90[_0xec0d8(0x17d)]():null;let _0x5a31d6=0x0,_0x251e22=0x0;if(_0x607db5&&_0x607db5[_0xec0d8(0x158)]&&_0x607db5['avg_temp'][_0xec0d8(0x130)]>0x0)_0x5a31d6=_0x607db5[_0xec0d8(0x158)][0x0]['ts'];if(_0x46f9d0&&_0x46f9d0[_0xec0d8(0x12f)]&&_0x46f9d0[_0xec0d8(0x12f)][_0xec0d8(0x130)]>0x0)_0x251e22=_0x46f9d0[_0xec0d8(0x12f)][0x0]['ts'];if(_0x5a31d6===0x0&&_0x251e22===0x0)throw new Error('No\x20recent\x20data\x20returned\x20from\x20either\x20station\x20device.');const _0x1cff29=new Date();let _0x518fd3,_0x18b7bd,_0x1185b0,_0xe99c9d,_0x326dc9,_0x116fca;_0x251e22>=_0x5a31d6?(_0x518fd3=_0x46f9d0,_0x18b7bd=_0x251e22,_0x1185b0=_0xec0d8(0x122)):(_0x518fd3=_0x607db5,_0x18b7bd=_0x5a31d6,_0x1185b0='old');if(_0x1185b0===_0xec0d8(0x122)){_0xe99c9d=parseFloat(_0x518fd3[_0xec0d8(0x12f)][0x0]['value']),_0x326dc9=parseFloat(_0x518fd3['pressure'][0x0][_0xec0d8(0x188)]),_0x116fca=parseFloat(_0x518fd3[_0xec0d8(0x132)][0x0][_0xec0d8(0x188)]);if(_0x518fd3[_0xec0d8(0x173)]&&_0x518fd3[_0xec0d8(0x173)]['length']>0x0){const _0x5866a4=parseFloat(_0x518fd3[_0xec0d8(0x173)][0x0]['value']);document[_0xec0d8(0x133)](_0xec0d8(0x115))[_0xec0d8(0x188)]=_0x5866a4['toFixed'](0x1);}_0x518fd3['illuminance']&&_0x518fd3[_0xec0d8(0x12e)][_0xec0d8(0x130)]>0x0&&(document[_0xec0d8(0x133)](_0xec0d8(0x126))['style'][_0xec0d8(0x192)]=_0xec0d8(0x159),document['getElementById']('illuminance')[_0xec0d8(0x188)]=_0x518fd3['illuminance'][0x0][_0xec0d8(0x188)]),document[_0xec0d8(0x133)](_0xec0d8(0x109))['innerText']='Status:\x20Tracking\x20Mini-C6AG\x20Source\x20-\x20'+_0x1cff29[_0xec0d8(0x139)]();}else _0xe99c9d=parseFloat(_0x518fd3[_0xec0d8(0x158)][0x0][_0xec0d8(0x188)]),_0x326dc9=parseFloat(_0x518fd3['bp'][0x0][_0xec0d8(0x188)]),_0x116fca=parseFloat(_0x518fd3['sh'][0x0][_0xec0d8(0x188)]),document['getElementById'](_0xec0d8(0x126))[_0xec0d8(0x136)][_0xec0d8(0x192)]=_0xec0d8(0x112),document[_0xec0d8(0x133)]('status')[_0xec0d8(0x18f)]=_0xec0d8(0x169)+_0x1cff29['toLocaleTimeString']();document[_0xec0d8(0x133)](_0xec0d8(0x109))[_0xec0d8(0x136)][_0xec0d8(0x148)]=_0xec0d8(0x17f);const _0x4715f6=new Date(_0x18b7bd),_0x4f664e=document[_0xec0d8(0x133)](_0xec0d8(0x15a));_0x4f664e['innerText']=_0xec0d8(0x18c)+_0x4715f6[_0xec0d8(0x110)]()+_0xec0d8(0x157)+_0x4715f6[_0xec0d8(0x139)]();const _0x55766f=(_0x1cff29[_0xec0d8(0x155)]()-_0x18b7bd)/0xea60,_0x520644=document[_0xec0d8(0x152)](_0xec0d8(0x18e));_0x55766f>0x5?(_0x4f664e[_0xec0d8(0x136)][_0xec0d8(0x148)]=_0xec0d8(0x120),_0x520644[_0xec0d8(0x161)](_0x450efe=>{const _0x4593f8=_0xec0d8;_0x450efe[_0x4593f8(0x129)]=![],_0x450efe[_0x4593f8(0x12a)]['add'](_0x4593f8(0x15d));}),document[_0xec0d8(0x133)](_0xec0d8(0x16f))[_0xec0d8(0x188)]==='0'&&document[_0xec0d8(0x133)](_0xec0d8(0x13c))[_0xec0d8(0x188)]==='0'&&(document[_0xec0d8(0x133)]('temp-val')['value']=_0xe99c9d[_0xec0d8(0x135)](0x2),document[_0xec0d8(0x133)](_0xec0d8(0x13c))['value']=_0x326dc9['toFixed'](0x2),document[_0xec0d8(0x133)](_0xec0d8(0x17e))[_0xec0d8(0x188)]=_0x116fca[_0xec0d8(0x135)](0x1),calculateAdvancedMetrics(_0xe99c9d,_0x326dc9,_0x116fca))):(_0x4f664e['style'][_0xec0d8(0x148)]=_0xec0d8(0x17f),_0x520644[_0xec0d8(0x161)](_0x39a4d6=>{const _0x1a8b73=_0xec0d8;_0x39a4d6['readOnly']=!![],_0x39a4d6['classList'][_0x1a8b73(0x174)]('editable');}),document[_0xec0d8(0x133)](_0xec0d8(0x16f))[_0xec0d8(0x188)]=_0xe99c9d[_0xec0d8(0x135)](0x2),document[_0xec0d8(0x133)](_0xec0d8(0x13c))['value']=_0x326dc9['toFixed'](0x2),document[_0xec0d8(0x133)](_0xec0d8(0x17e))[_0xec0d8(0x188)]=_0x116fca[_0xec0d8(0x135)](0x1),calculateAdvancedMetrics(_0xe99c9d,_0x326dc9,_0x116fca));}catch(_0x34eeab){console['error'](_0xec0d8(0x15b),_0x34eeab),document['getElementById'](_0xec0d8(0x109))[_0xec0d8(0x18f)]=_0xec0d8(0x162),document[_0xec0d8(0x133)](_0xec0d8(0x109))[_0xec0d8(0x136)][_0xec0d8(0x148)]=_0xec0d8(0x120);}}function _0xe77c(){const _0x4872a8=['carSelect','baseRuns','#aaa','querySelectorAll','drag_calc_m_da','area','getTime','\x20mph\x20/\x20','\x20at\x20','avg_temp','block','last-update','Telemetry\x20error:','resEtDiff','editable','#e0a800','resPredictedEt','s\x20@\x20','forEach','Status:\x20Connection\x20Error\x20reading\x20telemetry.','154pZxhNI','activeBaseRunId','createElement','57xrOzpH','keys','round','Status:\x20Tracking\x20Original\x20Source\x20-\x20','2-digit','4.85','getItem','drag_calc_m_','inputs','temp-val','resAero','ApiKey\x20','catch','effective_wind','remove','da-val','\x20ft','textContent','\x20°F','Are\x20you\x20sure\x20you\x20want\x20to\x20delete\x20this\x20saved\x20base\x20run\x20from\x20the\x20log\x20history?','option','sqrt','push','json','sh-val','#28a745','removeItem','Temp','drag_calc_m_weight','2371146JKpwNV','totalHp','pow','Status:\x20Manual\x20Input\x20Mode','modeToggle','value','147716zpBYUq','\x20MPH','mph','Last\x20data\x20packet:\x20','weight','.telemetry-input','innerText','checked','No\x20Base\x20Run\x20Locked','display','now','drag_calc_baseRun','3265aozdqM','manualLabel','https://','application/json','status','\x20HP','3050','drag_calc_m_mph','A\x20car\x20with\x20this\x20name\x20already\x20exists.','run_','isLocked','toLocaleDateString','Enter\x20a\x20name\x20for\x20the\x20new\x20car:','none','4903968RPwESA','innerHTML','windSpeed','1Wpuuhp','drag_calc_carsData','appendChild','10518pepAKG','drag_calc_m_area','drag_calc_currentCar','drag_calc_m_et','exp','No\x20Base\x20Runs\x20Saved','\x20DA)','#dc3545','/api/plugins/telemetry/DEVICE/','new','resPredictedEtHpcf','ad-val','temp','illuminance-group','trim','Locked\x20[','readOnly','classList','\x20gpp','\x20DA','filter','illuminance','temperature','length','setItem','humidity','getElementById','baseRunSelect','toFixed','style','stringify','onload','toLocaleTimeString','resTotal','2181900YQCOSf','bp-val','resMech','invAvg','label','selected','resEtDiffHpcf','add','9109917cVCjlT','find','parse','drag_calc_m_windSpeed','baseRun','color','Telemetry\x20updates\x20paused.','#ff4500','6652940QEeHGX','baseRunStatus','/values/timeseries?keys=temperature,pressure,humidity,effective_wind,illuminance','7lomkqf'];_0xe77c=function(){return _0x4872a8;};return _0xe77c();}function calculateAdvancedMetrics(_0x46a70b,_0x5a3ab8,_0x49c5c9){const _0x489c8b=_0x40ebd3,_0x2ceb3c=(_0x46a70b-0x20)*0x5/0x9,_0x17c7e9=_0x2ceb3c+273.15,_0xf190e4=_0x5a3ab8*33.8639,_0x35f597=17.27,_0x47b17c=237.7,_0x28b418=_0x35f597*_0x2ceb3c/(_0x47b17c+_0x2ceb3c)+Math['log'](_0x49c5c9/0x64),_0x32e501=_0x47b17c*_0x28b418/(_0x35f597-_0x28b418),_0x3d152f=_0x32e501*0x9/0x5+0x20,_0x2ed459=6.112*Math[_0x489c8b(0x11d)](17.67*_0x2ceb3c/(_0x2ceb3c+243.5)),_0x40bf8c=_0x2ed459*(_0x49c5c9/0x64),_0x567d75=_0xf190e4-_0x40bf8c,_0xb83e0b=0x1b58*0.62198*(_0x40bf8c/_0x567d75),_0x1d2314=287.058,_0x279239=461.495,_0x488099=_0x567d75*0x64,_0x2b55df=_0x40bf8c*0x64,_0x1651b4=_0x488099/(_0x1d2314*_0x17c7e9)+_0x2b55df/(_0x279239*_0x17c7e9),_0x3af583=_0x1651b4*0.06242796,_0x40cfdf=1.225,_0x1241c3=(0x1-Math[_0x489c8b(0x185)](_0x1651b4/_0x40cfdf,0.234969))/0.000006875585,_0x11e385=_0x5a3ab8-_0x40bf8c*0.02953,_0x1786de=1.18*(29.234/_0x11e385*Math['sqrt']((_0x46a70b+459.67)/0x219))-0.18,_0x31cd17=29.92/_0x11e385*Math[_0x489c8b(0x17b)]((_0x46a70b+459.67)/0x208),_0x2ce1b4=1013.25/_0xf190e4*((_0x2ceb3c+273.15)/293.15);document[_0x489c8b(0x133)](_0x489c8b(0x175))[_0x489c8b(0x18f)]=Math[_0x489c8b(0x168)](_0x1241c3)['toLocaleString']()+_0x489c8b(0x176),document[_0x489c8b(0x133)](_0x489c8b(0x124))['innerText']=_0x3af583[_0x489c8b(0x135)](0x6)+'\x20lb/ft³',document[_0x489c8b(0x133)]('wg-val')[_0x489c8b(0x18f)]=Math['round'](_0xb83e0b)+_0x489c8b(0x12b),document[_0x489c8b(0x133)]('dp-val')[_0x489c8b(0x18f)]=_0x3d152f['toFixed'](0x1)+_0x489c8b(0x178),document[_0x489c8b(0x133)]('sae-modern-val')['innerText']=_0x1786de['toFixed'](0x3),document['getElementById']('sae-classic-val')['innerText']=_0x31cd17[_0x489c8b(0x135)](0x3),document['getElementById']('din-val')[_0x489c8b(0x18f)]=_0x2ce1b4[_0x489c8b(0x135)](0x3);const _0x5d030c=(_0x1786de+_0x31cd17+_0x2ce1b4)/0x3,_0x50a792=0x1/_0x5d030c;document[_0x489c8b(0x133)]('inv-avg-val')[_0x489c8b(0x18f)]=_0x50a792[_0x489c8b(0x135)](0x5),windowGlobalInvAvg=_0x50a792;const _0x32394f=Math[_0x489c8b(0x168)](_0x1241c3);document[_0x489c8b(0x133)]('da')[_0x489c8b(0x188)]=_0x32394f,hasReceivedTelemetryDa=!![],calculateHorsepower();}function lockBaseRun(){const _0x2f787c=_0x40ebd3,_0x124633=parseFloat(document['getElementById'](_0x2f787c(0x18d))[_0x2f787c(0x188)]),_0xd7e333=parseFloat(document[_0x2f787c(0x133)]('et')[_0x2f787c(0x188)]),_0x933c5e=parseFloat(document['getElementById']('mph')[_0x2f787c(0x188)]),_0x4c9bf3=parseFloat(document['getElementById'](_0x2f787c(0x154))['value']),_0x2e4e58=parseFloat(document[_0x2f787c(0x133)](_0x2f787c(0x115))[_0x2f787c(0x188)]),_0x11c287=parseFloat(document[_0x2f787c(0x133)]('da')[_0x2f787c(0x188)]);if(isNaN(_0x124633)||isNaN(_0xd7e333)||isNaN(_0x933c5e))return;const _0x505da5=_0x124633/Math['pow'](_0xd7e333/3.7,0x3),_0xcf2fca=0.0023769,_0x146ba7=Math[_0x2f787c(0x185)](0x1-0.0000068756*_0x11c287,4.25588),_0x1c9239=_0xcf2fca*_0x146ba7;let _0xb135d5=_0x933c5e+_0x2e4e58;if(_0xb135d5<0x0)_0xb135d5=0x0;const _0x308604=_0xb135d5*1.46667,_0x1a1f03=_0x933c5e*1.46667,_0x5d57b5=0.5*_0x1c9239*Math['pow'](_0x308604,0x2)*0.45*_0x4c9bf3,_0x3e2e6c=_0x5d57b5*_0x1a1f03/0x226/0x3,_0x3c371f=_0x505da5+_0x3e2e6c;baseRun={'isLocked':!![],'weight':_0x124633,'et':_0xd7e333,'mph':_0x933c5e,'area':_0x4c9bf3,'windSpeed':_0x2e4e58,'da':_0x11c287,'airDensity':_0x1c9239,'invAvg':windowGlobalInvAvg,'totalHp':_0x3c371f},carsData[currentCarName][_0x2f787c(0x147)]=baseRun,carsData[currentCarName]['activeBaseRunId']=_0x2f787c(0x125),localStorage[_0x2f787c(0x131)](_0x2f787c(0x117),JSON[_0x2f787c(0x137)](carsData)),updateBaseRunDropdown(),setActiveBaseRunFromId(),calculateHorsepower();}function clearBaseRun(){const _0x39ddc4=_0x40ebd3,_0x399153=carsData[currentCarName];_0x399153[_0x39ddc4(0x164)]&&_0x399153['activeBaseRunId']!==_0x39ddc4(0x125)?confirm(_0x39ddc4(0x179))&&(_0x399153[_0x39ddc4(0x150)]=_0x399153[_0x39ddc4(0x150)][_0x39ddc4(0x12d)](_0x14bf25=>_0x14bf25['id']!==_0x399153['activeBaseRunId']),_0x399153[_0x39ddc4(0x164)]=_0x399153[_0x39ddc4(0x150)][_0x39ddc4(0x130)]>0x0?_0x399153['baseRuns'][0x0]['id']:'',localStorage['setItem'](_0x39ddc4(0x117),JSON[_0x39ddc4(0x137)](carsData)),updateBaseRunDropdown(),setActiveBaseRunFromId(),calculateHorsepower()):(baseRun={'isLocked':![]},_0x399153[_0x39ddc4(0x147)]=baseRun,_0x399153['activeBaseRunId']='',localStorage[_0x39ddc4(0x131)](_0x39ddc4(0x117),JSON[_0x39ddc4(0x137)](carsData)),document[_0x39ddc4(0x133)](_0x39ddc4(0x15f))['innerText']='--',document[_0x39ddc4(0x133)](_0x39ddc4(0x15c))['innerText']='--',document[_0x39ddc4(0x133)](_0x39ddc4(0x14c))[_0x39ddc4(0x18f)]='No\x20Base\x20Run\x20Locked',updateBaseRunDropdown());}function predictPerformance(_0x7cffc2){const _0x5914d7=_0x40ebd3;if(!baseRun[_0x5914d7(0x10f)]){document[_0x5914d7(0x133)]('resPredictedEt')['innerText']='--',document['getElementById']('resEtDiff')['innerText']='--',document[_0x5914d7(0x133)](_0x5914d7(0x123))[_0x5914d7(0x18f)]='--',document[_0x5914d7(0x133)](_0x5914d7(0x141))[_0x5914d7(0x18f)]='--';return;}const _0x1be734=parseFloat(document[_0x5914d7(0x133)](_0x5914d7(0x18d))[_0x5914d7(0x188)]),_0x4a3986=parseFloat(document[_0x5914d7(0x133)](_0x5914d7(0x154))['value']),_0x263bab=parseFloat(document[_0x5914d7(0x133)]('windSpeed')[_0x5914d7(0x188)]),_0x30390b=parseFloat(document[_0x5914d7(0x133)]('da')['value']),_0x20e65c=0.45,_0x3eaa53=(0x1-_0x30390b/0x7530)/(0x1-baseRun['da']/0x7530),_0x1d0710=baseRun['totalHp']*_0x3eaa53;let _0x560429=baseRun['et'],_0x35487c=baseRun[_0x5914d7(0x18b)];for(let _0x1079c4=0x0;_0x1079c4<0x14;_0x1079c4++){_0x35487c=baseRun[_0x5914d7(0x18b)]*(baseRun['et']/_0x560429);let _0xe91d91=_0x35487c+_0x263bab;if(_0xe91d91<0x0)_0xe91d91=0x0;let _0x177290=_0xe91d91*1.46667,_0x42809c=_0x35487c*1.46667,_0x920b84=0.5*_0x7cffc2*Math[_0x5914d7(0x185)](_0x177290,0x2)*_0x20e65c*_0x4a3986,_0x21af91=_0x920b84*_0x42809c/0x226/0x3,_0x28d955=_0x1d0710-_0x21af91;if(_0x28d955<=0x0){_0x560429=99.99;break;}_0x560429=3.7*Math[_0x5914d7(0x185)](_0x1be734/_0x28d955,0x1/0x3);}const _0x4ec91a=0x1/baseRun[_0x5914d7(0x13e)],_0x3a3617=0x1/windowGlobalInvAvg,_0x25e432=baseRun[_0x5914d7(0x184)]*_0x4ec91a,_0x3b6c4a=_0x25e432/_0x3a3617;let _0x3bbf5b=baseRun['et'],_0xf3fdd9=baseRun[_0x5914d7(0x18b)];for(let _0x1f57c5=0x0;_0x1f57c5<0x14;_0x1f57c5++){_0xf3fdd9=baseRun[_0x5914d7(0x18b)]*(baseRun['et']/_0x3bbf5b);let _0x3aa29b=_0xf3fdd9+_0x263bab;if(_0x3aa29b<0x0)_0x3aa29b=0x0;let _0x31a0f8=_0x3aa29b*1.46667,_0x85ae28=_0xf3fdd9*1.46667,_0x722152=0.5*_0x7cffc2*Math[_0x5914d7(0x185)](_0x31a0f8,0x2)*_0x20e65c*_0x4a3986,_0x485611=_0x722152*_0x85ae28/0x226/0x3,_0x32f8c3=_0x3b6c4a-_0x485611;if(_0x32f8c3<=0x0){_0x3bbf5b=99.99;break;}_0x3bbf5b=3.7*Math['pow'](_0x1be734/_0x32f8c3,0x1/0x3);}function _0x3959ca(_0x2c06b5,_0x188c59,_0x3ec67c){const _0x33ee61=_0x5914d7,_0x5cd78c=_0x3ec67c-baseRun['et'],_0x54cc81=_0x5cd78c>0x0?'+':'',_0x50b01f=_0x3ec67c>baseRun['et']?'#ff4500':_0x33ee61(0x17f),_0x2d671c=document['getElementById'](_0x2c06b5),_0x326f1c=document[_0x33ee61(0x133)](_0x188c59);_0x2d671c[_0x33ee61(0x18f)]=_0x3ec67c[_0x33ee61(0x135)](0x4),_0x2d671c[_0x33ee61(0x136)][_0x33ee61(0x148)]=_0x50b01f,_0x326f1c['innerText']=''+_0x54cc81+_0x5cd78c['toFixed'](0x4),_0x326f1c[_0x33ee61(0x136)][_0x33ee61(0x148)]=_0x50b01f;}_0x3959ca(_0x5914d7(0x15f),_0x5914d7(0x15c),_0x560429),_0x3959ca(_0x5914d7(0x123),'resEtDiffHpcf',_0x3bbf5b);}function calculateHorsepower(){const _0x1f6a27=_0x40ebd3,_0xab5d9f=parseFloat(document['getElementById']('weight')['value']),_0x313f87=parseFloat(document[_0x1f6a27(0x133)]('et')[_0x1f6a27(0x188)]),_0x4775f8=parseFloat(document[_0x1f6a27(0x133)](_0x1f6a27(0x18b))['value']),_0x125271=parseFloat(document[_0x1f6a27(0x133)](_0x1f6a27(0x154))[_0x1f6a27(0x188)]),_0x2e5f66=parseFloat(document[_0x1f6a27(0x133)](_0x1f6a27(0x115))[_0x1f6a27(0x188)]),_0x6c7e21=parseFloat(document['getElementById']('da')[_0x1f6a27(0x188)]);if(isNaN(_0xab5d9f)||isNaN(_0x313f87)||isNaN(_0x4775f8)||isNaN(_0x125271)||isNaN(_0x2e5f66)||isNaN(_0x6c7e21)||_0x313f87<=0x0||_0x4775f8<=0x0)return;saveCurrentInputs(_0xab5d9f,_0x313f87,_0x4775f8,_0x125271,_0x2e5f66,_0x6c7e21);const _0x168c6d=_0x4775f8,_0x39e0fa=_0xab5d9f/Math[_0x1f6a27(0x185)](_0x313f87/3.7,0x3),_0x4c89e9=0.0023769,_0x2e9783=Math[_0x1f6a27(0x185)](0x1-0.0000068756*_0x6c7e21,4.25588),_0x3d478c=_0x4c89e9*_0x2e9783;let _0x5e3f2b=_0x168c6d+_0x2e5f66;if(_0x5e3f2b<0x0)_0x5e3f2b=0x0;const _0x2ceacd=_0x5e3f2b*1.46667,_0x2c9f34=_0x168c6d*1.46667,_0x52d184=0.45,_0x226c1e=0.5*_0x3d478c*Math[_0x1f6a27(0x185)](_0x2ceacd,0x2)*_0x52d184*_0x125271,_0x46ab41=_0x226c1e*_0x2c9f34/0x226,_0x2f5fd0=_0x46ab41/0x3,_0x4c459e=_0x39e0fa+_0x2f5fd0;document['getElementById']('resSpeed')['innerText']=_0x168c6d['toFixed'](0x2)+_0x1f6a27(0x18a),document[_0x1f6a27(0x133)](_0x1f6a27(0x13d))['innerText']=_0x39e0fa[_0x1f6a27(0x135)](0x2)+_0x1f6a27(0x10a),document[_0x1f6a27(0x133)](_0x1f6a27(0x170))[_0x1f6a27(0x18f)]=_0x2f5fd0[_0x1f6a27(0x135)](0x2)+_0x1f6a27(0x10a),document[_0x1f6a27(0x133)](_0x1f6a27(0x13a))['innerText']=_0x4c459e[_0x1f6a27(0x135)](0x2)+'\x20HP',predictPerformance(_0x3d478c);}window[_0x40ebd3(0x138)]=function(){initCars(),loadCarData(),fetchLiveTelemetry(),setInterval(fetchLiveTelemetry,POLL_INTERVAL);};
+// ================= STATE =================
+let windowGlobalInvAvg = 1.0; 
+let baseRun = { isLocked: false };
+let isManualMode = false;
+let hasReceivedTelemetryDa = false;
+
+const defaults = {
+    weight: "2000",
+    et: "4.85",
+    mph: "143.4",
+    area: "15",
+    windSpeed: "0",
+    da: "3050"
+};
+
+// Garage Data State
+let carsData = {};
+let currentCarName = "";
+
+// ================= CAR MANAGEMENT =================
+function initCars() {
+    const savedGarage = localStorage.getItem('drag_calc_carsData');
+    if (savedGarage) {
+        try { carsData = JSON.parse(savedGarage); } catch(e) { carsData = {}; }
+    }
+    
+    if (Object.keys(carsData).length === 0) {
+        const legacyWeight = localStorage.getItem('drag_calc_m_weight');
+        carsData = { "Default Car": { inputs: {...defaults}, baseRun: { isLocked: false }, baseRuns: [], activeBaseRunId: "" } };
+        
+        if (legacyWeight) {
+            carsData["Default Car"].inputs = {
+                weight: legacyWeight,
+                et: localStorage.getItem('drag_calc_m_et') || defaults.et,
+                mph: localStorage.getItem('drag_calc_m_mph') || defaults.mph,
+                area: localStorage.getItem('drag_calc_m_area') || defaults.area,
+                windSpeed: localStorage.getItem('drag_calc_m_windSpeed') || defaults.windSpeed,
+                da: localStorage.getItem('drag_calc_m_da') || defaults.da
+            };
+            const legacyBase = localStorage.getItem('drag_calc_baseRun');
+            if (legacyBase) {
+                try { 
+                    const oldBase = JSON.parse(legacyBase);
+                    carsData["Default Car"].baseRun = oldBase;
+                } catch(e){}
+            }
+            ['weight','et','mph','area','windSpeed','da'].forEach(k => localStorage.removeItem('drag_calc_m_'+k));
+            localStorage.removeItem('drag_calc_baseRun');
+        }
+    }
+    
+    for (let name in carsData) {
+        if (!carsData[name].baseRuns) carsData[name].baseRuns = [];
+        if (carsData[name].activeBaseRunId === undefined) {
+            if (carsData[name].baseRun && carsData[name].baseRun.isLocked) {
+                carsData[name].activeBaseRunId = "temp";
+            } else if (carsData[name].baseRuns.length > 0) {
+                carsData[name].activeBaseRunId = carsData[name].baseRuns[0].id;
+            } else {
+                carsData[name].activeBaseRunId = "";
+            }
+        }
+    }
+    
+    const savedCurrent = localStorage.getItem('drag_calc_currentCar');
+    if (savedCurrent && carsData[savedCurrent]) {
+        currentCarName = savedCurrent;
+    } else {
+        currentCarName = Object.keys(carsData)[0];
+    }
+    
+    updateCarDropdown();
+}
+
+function updateCarDropdown() {
+    const select = document.getElementById('carSelect');
+    select.innerHTML = '';
+    for (let name in carsData) {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        if (name === currentCarName) opt.selected = true;
+        select.appendChild(opt);
+    }
+}
+
+function changeCar() {
+    currentCarName = document.getElementById('carSelect').value;
+    localStorage.setItem('drag_calc_currentCar', currentCarName);
+    loadCarData(); 
+}
+
+function addCar() {
+    const name = prompt("Enter a name for the new car:");
+    if (!name || name.trim() === "") return;
+    if (carsData[name]) {
+        alert("A car with this name already exists.");
+        return;
+    }
+    carsData[name] = { inputs: {...defaults}, baseRun: { isLocked: false }, baseRuns: [], activeBaseRunId: "" };
+    currentCarName = name;
+    
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    localStorage.setItem('drag_calc_currentCar', currentCarName);
+    
+    updateCarDropdown();
+    loadCarData();
+}
+
+function deleteCar() {
+    if (Object.keys(carsData).length <= 1) {
+        alert("You must have at least one profile in your garage.");
+        return;
+    }
+    if (confirm(`Are you sure you want to delete profile: "${currentCarName}"?`)) {
+        delete carsData[currentCarName];
+        currentCarName = Object.keys(carsData)[0]; 
+        
+        localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+        localStorage.setItem('drag_calc_currentCar', currentCarName);
+        
+        updateCarDropdown();
+        loadCarData();
+    }
+}
+
+function loadCarData() {
+    const car = carsData[currentCarName];
+    
+    if (!car.baseRuns) car.baseRuns = [];
+    if (car.activeBaseRunId === undefined) car.activeBaseRunId = "";
+    
+    const fields = ['weight', 'et', 'mph', 'area', 'windSpeed', 'da'];
+    fields.forEach(f => {
+        if (f === 'da' && hasReceivedTelemetryDa) return; 
+        if (car.inputs[f] !== undefined) document.getElementById(f).value = car.inputs[f];
+    });
+    
+    updateBaseRunDropdown();
+    setActiveBaseRunFromId();
+    
+    calculateHorsepower();
+}
+
+function saveCurrentInputs(weight, et, mph, area, windSpeed, da) {
+    carsData[currentCarName].inputs = { weight, et, mph, area, windSpeed, da };
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+}
+
+function resetToDefaults() {
+    carsData[currentCarName].inputs = {...defaults};
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    loadCarData(); 
+}
+
+// ================= BASE RUN MANAGEMENT EXTENSIONS =================
+function updateBaseRunDropdown() {
+    const select = document.getElementById('baseRunSelect');
+    select.innerHTML = '';
+    
+    const car = carsData[currentCarName];
+    
+    if (car.baseRuns.length === 0 && (!car.baseRun || !car.baseRun.isLocked)) {
+        const opt = document.createElement('option');
+        opt.value = "";
+        opt.textContent = "No Base Runs Saved";
+        select.appendChild(opt);
+        return;
+    }
+    
+    if (car.baseRun && car.baseRun.isLocked) {
+        const opt = document.createElement('option');
+        opt.value = "temp";
+        opt.textContent = `[Temp Base] ${car.baseRun.et}s @ ${Math.round(car.baseRun.da)} DA`;
+        if (car.activeBaseRunId === "temp") opt.selected = true;
+        select.appendChild(opt);
+    }
+    
+    car.baseRuns.forEach(run => {
+        const opt = document.createElement('option');
+        opt.value = run.id;
+        opt.textContent = run.label || `${run.timestamp} (${run.et}s)`;
+        if (run.id === car.activeBaseRunId) opt.selected = true;
+        select.appendChild(opt);
+    });
+}
+
+function changeBaseRun() {
+    const id = document.getElementById('baseRunSelect').value;
+    carsData[currentCarName].activeBaseRunId = id;
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    
+    setActiveBaseRunFromId();
+    calculateHorsepower();
+}
+
+function setActiveBaseRunFromId() {
+    const car = carsData[currentCarName];
+    
+    if (car.activeBaseRunId === "temp" && car.baseRun && car.baseRun.isLocked) {
+        baseRun = car.baseRun;
+    } else if (car.activeBaseRunId && car.baseRuns) {
+        const found = car.baseRuns.find(r => r.id === car.activeBaseRunId);
+        if (found) {
+            baseRun = found;
+        } else {
+            baseRun = { isLocked: false };
+            car.activeBaseRunId = "";
+        }
+    } else {
+        baseRun = { isLocked: false };
+        car.activeBaseRunId = "";
+    }
+    
+    if (!baseRun.isLocked) {
+        document.getElementById('resPredictedEt').innerText = "--";
+        document.getElementById('resEtDiff').innerText = "--";
+        document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+    } else {
+        const typePrefix = car.activeBaseRunId === "temp" ? "Temp" : "Saved";
+        document.getElementById('baseRunStatus').innerText = `Locked [${typePrefix}]: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
+    }
+}
+
+function saveBaseRun() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+
+    if (isNaN(weight) || isNaN(et) || isNaN(mph)) {
+        alert("Please confirm inputs are valid before logging data profiles.");
+        return;
+    }
+
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio;
+    
+    let relativeAirSpeedMph = mph + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = mph * 1.46667;
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * 0.45 * area;
+    const avgAeroHp = (peakDragForce * carSpeedFps) / 550 / 3;
+    const totalHp = mechanicalHp + avgAeroHp;
+
+    const uniqueId = 'run_' + Date.now();
+    const now = new Date();
+    const timestamp = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+    const newRun = {
+        id: uniqueId,
+        isLocked: true,
+        timestamp: timestamp,
+        weight: weight,
+        et: et,
+        mph: mph,
+        area: area,
+        windSpeed: windSpeed,
+        da: da,
+        airDensity: airDensity,
+        invAvg: windowGlobalInvAvg,
+        totalHp: totalHp,
+        label: `${timestamp} (${et.toFixed(3)}s @ ${Math.round(da)} DA)`
+    };
+
+    const car = carsData[currentCarName];
+    car.baseRuns.push(newRun);
+    car.activeBaseRunId = uniqueId;
+    
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    
+    updateBaseRunDropdown();
+    setActiveBaseRunFromId();
+    calculateHorsepower();
+}
+
+// ================= TELEMETRY & MODE TOGGLE =================
+function toggleMode() {
+    isManualMode = document.getElementById('modeToggle').checked;
+    const inputs = document.querySelectorAll('.telemetry-input');
+    const autoLabel = document.getElementById('autoLabel');
+    const manualLabel = document.getElementById('manualLabel');
+    const statusText = document.getElementById('status');
+    const lastUpdateText = document.getElementById('last-update');
+
+    if (isManualMode) {
+        inputs.forEach(input => {
+            input.readOnly = false;
+            input.classList.add('editable');
+        });
+        autoLabel.style.color = "#aaa";
+        manualLabel.style.color = "#ff4500";
+        statusText.innerText = "Status: Manual Input Mode";
+        statusText.style.color = "#ff4500";
+        lastUpdateText.innerText = "Telemetry updates paused.";
+        manualCalculate(); 
+    } else {
+        inputs.forEach(input => {
+            input.readOnly = true;
+            input.classList.remove('editable');
+        });
+        autoLabel.style.color = "#28a745";
+        manualLabel.style.color = "#aaa";
+        statusText.innerText = "Status: Reconnecting to Weather Data...";
+        statusText.style.color = "#e0a800";
+        fetchLiveTelemetry(); 
+    }
+}
+
+function manualCalculate() {
+    const tempInput = document.getElementById('temp-val');
+    if (!isManualMode && tempInput.readOnly) return; 
+
+    const t = parseFloat(document.getElementById('temp-val').value);
+    const bp = parseFloat(document.getElementById('bp-val').value);
+    const sh = parseFloat(document.getElementById('sh-val').value);
+
+    if (!isNaN(t) && !isNaN(bp) && !isNaN(sh)) {
+        calculateAdvancedMetrics(t, bp, sh);
+    }
+}    
+    
+async function fetchLiveTelemetry() {
+    if (isManualMode) return; 
+
+    const urlOld = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID_OLD}/values/timeseries?keys=avg_temp,bp,sh`;
+    const urlNew = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID_NEW}/values/timeseries?keys=temperature,pressure,humidity,effective_wind,illuminance`;
+
+    try {
+        // Fetch concurrently from both endpoints
+        const [resOld, resNew] = await Promise.all([
+            fetch(urlOld, { headers: { 'Content-Type': 'application/json', 'X-Authorization': `ApiKey ${API_KEY}` } }).catch(() => null),
+            fetch(urlNew, { headers: { 'Content-Type': 'application/json', 'X-Authorization': `ApiKey ${API_KEY}` } }).catch(() => null)
+        ]);
+
+        const dataOld = (resOld && resOld.ok) ? await resOld.json() : null;
+        const dataNew = (resNew && resNew.ok) ? await resNew.json() : null;
+
+        let timeOld = 0;
+        let timeNew = 0;
+        
+        if (dataOld && dataOld.avg_temp && dataOld.avg_temp.length > 0) timeOld = dataOld.avg_temp[0].ts;
+        if (dataNew && dataNew.temperature && dataNew.temperature.length > 0) timeNew = dataNew.temperature[0].ts;
+
+        if (timeOld === 0 && timeNew === 0) {
+            throw new Error("No recent data returned from either station device.");
+        }
+
+        const now = new Date();
+        let activeData, serverTimeMs, activeSource, T_f, P_inHg, RH;
+
+        // Compare data freshness
+        if (timeNew >= timeOld) {
+            activeData = dataNew;
+            serverTimeMs = timeNew;
+            activeSource = 'new';
+        } else {
+            activeData = dataOld;
+            serverTimeMs = timeOld;
+            activeSource = 'old';
+        }
+
+        if (activeSource === 'new') {
+            T_f = parseFloat(activeData.temperature[0].value);
+            P_inHg = parseFloat(activeData.pressure[0].value);
+            RH = parseFloat(activeData.humidity[0].value);
+            
+            // Map effective wind speed dynamically directly into the form
+            if (activeData.effective_wind && activeData.effective_wind.length > 0) {
+                const effectiveWind = parseFloat(activeData.effective_wind[0].value);
+                document.getElementById('windSpeed').value = effectiveWind.toFixed(1);
+            }
+            
+            // Unhide and populate Illuminance condition
+            if (activeData.illuminance && activeData.illuminance.length > 0) {
+                document.getElementById('illuminance-group').style.display = 'block';
+                document.getElementById('illuminance').value = activeData.illuminance[0].value;
+            }
+            document.getElementById('status').innerText = `Status: Mini-C6AG Source - ${now.toLocaleTimeString()}`;
+        } else {
+            T_f = parseFloat(activeData.avg_temp[0].value);
+            P_inHg = parseFloat(activeData.bp[0].value);
+            RH = parseFloat(activeData.sh[0].value);
+            
+            // Hide Illuminance block if old data stream assumes control
+            document.getElementById('illuminance-group').style.display = 'none';
+            document.getElementById('status').innerText = `Status: Tracking Original Source - ${now.toLocaleTimeString()}`;
+        }
+        
+        document.getElementById('status').style.color = "#28a745";
+
+        const dataDate = new Date(serverTimeMs);
+        const lastUpdateText = document.getElementById('last-update');
+        lastUpdateText.innerText = `Last data packet: ${dataDate.toLocaleDateString()} at ${dataDate.toLocaleTimeString()}`;
+
+        const executionDifferenceMinutes = (now.getTime() - serverTimeMs) / 60000;
+        const inputs = document.querySelectorAll('.telemetry-input');
+
+        if (executionDifferenceMinutes > 5) {
+            lastUpdateText.style.color = "#dc3545"; 
+            inputs.forEach(input => {
+                input.readOnly = false;
+                input.classList.add('editable');
+            });
+            if (document.getElementById('temp-val').value === "0" && document.getElementById('bp-val').value === "0") {
+                document.getElementById('temp-val').value = T_f.toFixed(2);
+                document.getElementById('bp-val').value = P_inHg.toFixed(2);
+                document.getElementById('sh-val').value = RH.toFixed(1);
+                calculateAdvancedMetrics(T_f, P_inHg, RH);
+            }
+        } else {
+            lastUpdateText.style.color = "#28a745"; 
+            inputs.forEach(input => {
+                input.readOnly = true;
+                input.classList.remove('editable');
+            });
+            document.getElementById('temp-val').value = T_f.toFixed(2);
+            document.getElementById('bp-val').value = P_inHg.toFixed(2);
+            document.getElementById('sh-val').value = RH.toFixed(1);
+            
+            calculateAdvancedMetrics(T_f, P_inHg, RH);
+        }
+    } catch (error) {
+        console.error("Telemetry error:", error);
+        document.getElementById('status').innerText = "Status: Connection Error reading telemetry.";
+        document.getElementById('status').style.color = "#dc3545";
+    }
+} 
+
+function calculateAdvancedMetrics(T_f, P_inHg, RH) {
+    const T_c = (T_f - 32) * 5 / 9;
+    const T_k = T_c + 273.15;
+    const P_mb = P_inHg * 33.8639;
+
+    const a = 17.27;
+    const b = 237.7;
+    const alpha = ((a * T_c) / (b + T_c)) + Math.log(RH / 100);
+    const T_dp_c = (b * alpha) / (a - alpha);
+    const T_dp_f = (T_dp_c * 9 / 5) + 32;
+
+    const Es_mb = 6.112 * Math.exp((17.67 * T_c) / (T_c + 243.5));
+    const Pv_mb = Es_mb * (RH / 100);
+    const P_dry_mb = P_mb - Pv_mb;
+    const waterGrains = 7000 * 0.62198 * (Pv_mb / P_dry_mb);
+
+    const R_dry = 287.058;
+    const R_vapor = 461.495;
+    const P_dry_pa = P_dry_mb * 100;
+    const Pv_pa = Pv_mb * 100;
+    const rho_kg_m3 = (P_dry_pa / (R_dry * T_k)) + (Pv_pa / (R_vapor * T_k));
+    const airDensity_lb_ft3 = rho_kg_m3 * 0.06242796;
+
+    const rho_standard = 1.225;
+    const densityAltitude_ft = (1 - Math.pow((rho_kg_m3 / rho_standard), 0.234969)) / 0.000006875585;
+
+    const P_dry_inHg = P_inHg - (Pv_mb * 0.02953);
+    const cf_sae_j1349 = 1.18 * ((29.234 / P_dry_inHg) * Math.sqrt((T_f + 459.67) / 537)) - 0.18;
+    const cf_sae_j607 = (29.92 / P_dry_inHg) * Math.sqrt((T_f + 459.67) / 520);
+    const cf_din_70020 = (1013.25 / P_mb) * ((T_c + 273.15) / 293.15);
+
+    document.getElementById('da-val').innerText = `${Math.round(densityAltitude_ft).toLocaleString()} ft`;
+    document.getElementById('ad-val').innerText = `${airDensity_lb_ft3.toFixed(6)} lb/ft³`;
+    document.getElementById('wg-val').innerText = `${Math.round(waterGrains)} gpp`;
+    document.getElementById('dp-val').innerText = `${T_dp_f.toFixed(1)} °F`;
+    document.getElementById('sae-modern-val').innerText = cf_sae_j1349.toFixed(3);
+    document.getElementById('sae-classic-val').innerText = cf_sae_j607.toFixed(3);
+    document.getElementById('din-val').innerText = cf_din_70020.toFixed(3);
+
+    const hpAverage = (cf_sae_j1349 + cf_sae_j607 + cf_din_70020) / 3.0;
+    const inverseAvg = 1.0 / hpAverage;
+    document.getElementById('inv-avg-val').innerText = inverseAvg.toFixed(5);
+    
+    windowGlobalInvAvg = inverseAvg;
+
+    const roundedDA = Math.round(densityAltitude_ft);
+    document.getElementById('da').value = roundedDA;
+    hasReceivedTelemetryDa = true;
+    
+    calculateHorsepower();
+}
+
+function editBaseRunName() {
+    const id = document.getElementById('baseRunSelect').value;
+    
+    // Ensure a valid, saved base run is selected (not empty and not the temporary lock)
+    if (!id || id === "temp" || id === "") {
+        alert("Please select a saved base run to edit.");
+        return;
+    }
+
+    const car = carsData[currentCarName];
+    const runIndex = car.baseRuns.findIndex(r => r.id === id);
+
+    if (runIndex === -1) return;
+
+    const currentLabel = car.baseRuns[runIndex].label;
+    const newLabel = prompt("Enter a new name for this base run:", currentLabel);
+
+    // If the user didn't cancel and the input isn't blank, save it
+    if (newLabel !== null && newLabel.trim() !== "") {
+        car.baseRuns[runIndex].label = newLabel.trim();
+        
+        // Save to local storage
+        localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+        
+        // Refresh the dropdown UI so the new name displays immediately
+        updateBaseRunDropdown(); 
+    }
+}
+
+// ============== BASE RUN ENGINE ==============
+function lockBaseRun() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+
+    if (isNaN(weight) || isNaN(et) || isNaN(mph)) return;
+
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio;
+    
+    let relativeAirSpeedMph = mph + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = mph * 1.46667;
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * 0.45 * area;
+    const avgAeroHp = (peakDragForce * carSpeedFps) / 550 / 3;
+    const totalHp = mechanicalHp + avgAeroHp;
+
+    baseRun = {
+        isLocked: true,
+        weight: weight,
+        et: et,
+        mph: mph,
+        area: area,
+        windSpeed: windSpeed,
+        da: da,
+        airDensity: airDensity,
+        invAvg: windowGlobalInvAvg,
+        totalHp: totalHp
+    };
+
+    carsData[currentCarName].baseRun = baseRun;
+    carsData[currentCarName].activeBaseRunId = "temp";
+    localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+    
+    updateBaseRunDropdown();
+    setActiveBaseRunFromId();
+    calculateHorsepower(); 
+}
+
+function clearBaseRun() {
+    const car = carsData[currentCarName];
+    
+    if (car.activeBaseRunId && car.activeBaseRunId !== "temp") {
+        if (confirm("Are you sure you want to delete this saved base run from the log history?")) {
+            car.baseRuns = car.baseRuns.filter(r => r.id !== car.activeBaseRunId);
+            car.activeBaseRunId = car.baseRuns.length > 0 ? car.baseRuns[0].id : "";
+            
+            localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+            updateBaseRunDropdown();
+            setActiveBaseRunFromId();
+            calculateHorsepower();
+        }
+    } else {
+        baseRun = { isLocked: false };
+        car.baseRun = baseRun;
+        car.activeBaseRunId = "";
+        localStorage.setItem('drag_calc_carsData', JSON.stringify(carsData));
+        
+        document.getElementById('resPredictedEt').innerText = "--";
+        document.getElementById('resEtDiff').innerText = "--";
+        document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+        updateBaseRunDropdown();
+    }
+}
+
+function predictPerformance(currentAirDensity) {
+    if (!baseRun.isLocked) {
+        document.getElementById('resPredictedEt').innerText = "--";
+        document.getElementById('resEtDiff').innerText = "--";
+        document.getElementById('resPredictedEtHpcf').innerText = "--";
+        document.getElementById('resEtDiffHpcf').innerText = "--";
+        return;
+    }
+
+    const currentWeight = parseFloat(document.getElementById('weight').value);
+    const currentArea = parseFloat(document.getElementById('area').value);
+    const currentWind = parseFloat(document.getElementById('windSpeed').value);
+    const currentDA = parseFloat(document.getElementById('da').value);
+    const cd = 0.45;
+
+    // ==========================================
+    // PREDICTION 1: THE ORIGINAL DA METHOD
+    // ==========================================
+    const daCorrectionFactor = (1 - (currentDA / 30000)) / (1 - (baseRun.da / 30000));
+    const availableHpDA = baseRun.totalHp * daCorrectionFactor;
+
+    let predictedEtDA = baseRun.et;
+    let predMphDA = baseRun.mph;
+
+    for (let i = 0; i < 20; i++) {
+        predMphDA = baseRun.mph * (baseRun.et / predictedEtDA);
+        
+        let relSpeedMph = predMphDA + currentWind;
+        if (relSpeedMph < 0) relSpeedMph = 0;
+        
+        let relFps = relSpeedMph * 1.46667;
+        let carFps = predMphDA * 1.46667;
+        
+        let peakDrag = 0.5 * currentAirDensity * Math.pow(relFps, 2) * cd * currentArea;
+        let aeroHp = (peakDrag * carFps) / 550 / 3;
+        
+        let mechHp = availableHpDA - aeroHp;
+        
+        if (mechHp <= 0) {
+            predictedEtDA = 99.99;
+            break;
+        }
+        
+        predictedEtDA = 3.7 * Math.pow(currentWeight / mechHp, 1/3);
+    }
+
+    // ==========================================
+    // PREDICTION 2: THE NEW HPCF METHOD
+    // ==========================================
+    const cfBase = 1.0 / baseRun.invAvg;
+    const cfCurrent = 1.0 / windowGlobalInvAvg;
+    
+    const theoreticalStandardHp = baseRun.totalHp * cfBase;
+    const availableHpHPCF = theoreticalStandardHp / cfCurrent;
+
+    let predictedEtHPCF = baseRun.et;
+    let predMphHPCF = baseRun.mph;
+
+    for (let i = 0; i < 20; i++) {
+        predMphHPCF = baseRun.mph * (baseRun.et / predictedEtHPCF);
+        
+        let relSpeedMph = predMphHPCF + currentWind;
+        if (relSpeedMph < 0) relSpeedMph = 0;
+        
+        let relFps = relSpeedMph * 1.46667;
+        let carFps = predMphHPCF * 1.46667;
+        
+        let peakDrag = 0.5 * currentAirDensity * Math.pow(relFps, 2) * cd * currentArea;
+        let aeroHp = (peakDrag * carFps) / 550 / 3;
+        
+        let mechHp = availableHpHPCF - aeroHp;
+        
+        if (mechHp <= 0) {
+            predictedEtHPCF = 99.99;
+            break;
+        }
+        
+        predictedEtHPCF = 3.7 * Math.pow(currentWeight / mechHp, 1/3);
+    }
+
+    function updateUI(elPredId, elDiffId, predictedET) {
+        const etDifference = predictedET - baseRun.et;
+        const sign = etDifference > 0 ? "+" : ""; 
+        const highlightColor = predictedET > baseRun.et ? "#ff4500" : "#28a745";
+
+        const elPred = document.getElementById(elPredId);
+        const elDiff = document.getElementById(elDiffId);
+
+        elPred.innerText = predictedET.toFixed(4);
+        elPred.style.color = highlightColor;
+        
+        elDiff.innerText = `${sign}${etDifference.toFixed(4)}`;
+        elDiff.style.color = highlightColor;
+    }
+
+    updateUI('resPredictedEt', 'resEtDiff', predictedEtDA);
+    updateUI('resPredictedEtHpcf', 'resEtDiffHpcf', predictedEtHPCF);
+}
+
+function calculateHorsepower() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+    
+    if (isNaN(weight) || isNaN(et) || isNaN(mph) || isNaN(area) || isNaN(windSpeed) || isNaN(da) || et <= 0 || mph <= 0) {
+        return; 
+    }
+    
+    saveCurrentInputs(weight, et, mph, area, windSpeed, da);
+    
+    const trapSpeed = mph; 
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio; 
+    
+    let relativeAirSpeedMph = trapSpeed + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = trapSpeed * 1.46667;
+    
+    const cd = 0.45; 
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * cd * area;
+    const peakAeroHp = (peakDragForce * carSpeedFps) / 550;
+    const avgAeroHp = peakAeroHp / 3;
+    
+    const totalHp = mechanicalHp + avgAeroHp;
+    
+    document.getElementById('resSpeed').innerText = trapSpeed.toFixed(2) + " MPH";
+    document.getElementById('resMech').innerText = mechanicalHp.toFixed(2) + " HP";
+    document.getElementById('resAero').innerText = avgAeroHp.toFixed(2) + " HP";
+    document.getElementById('resTotal').innerText = totalHp.toFixed(2) + " HP";
+
+    predictPerformance(airDensity);
+}
+
+window.onload = function() {
+    initCars();
+    loadCarData();
+    fetchLiveTelemetry();
+    setInterval(fetchLiveTelemetry, POLL_INTERVAL);
+};
 </script>
 </body>
 </html>
