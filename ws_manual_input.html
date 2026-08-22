@@ -279,11 +279,11 @@
         <input type="text" inputmode="decimal" id="mph" value="143.4">
     </div>
     
-    <div class="form-group">
+    <!-- <div class="form-group">
         <label for="windSpeed">Wind Speed (MPH):</label>
         <input type="text" inputmode="text" id="windSpeed" value="0">
         <span class="help-text">Type a minus (-) sign first for a tailwind.</span>
-    </div>
+    </div> -->
   
     <div class="form-group">
         <label for="weight">Car Weight (with driver, lbs):</label>
@@ -344,7 +344,7 @@
         </div>
     </div> -->
   <!-- <div class="container"> -->
-    <div class="bordered-container highlight-border">
+    <!-- <div class="bordered-container highlight-border">
         <h2>Manual Weather Inputs</h2>
         <div class="dashboard">
             <div class="card">
@@ -360,7 +360,30 @@
                 <input type="number" id="sh-in" value="50.1" step="0.1" oninput="triggerManualCalc()">
             </div>
         </div>
-    <div class="container">
+    <div class="container"> -->
+  <div class="bordered-container highlight-border">
+        <h2>Manual Weather Inputs</h2>
+        <div class="dashboard">
+            <div class="card">
+                <div class="label">Temp (°F)</div>
+                <input type="number" id="temp-in" value="70.1" step="0.1" oninput="triggerManualCalc()">
+            </div>
+            <div class="card">
+                <div class="label">Baro (inHg)</div>
+                <input type="number" id="bp-in" value="29.92" step="0.01" oninput="triggerManualCalc()">
+            </div>
+            <div class="card">
+                <div class="label">Humidity (%)</div>
+                <input type="number" id="sh-in" value="50.1" step="0.1" oninput="triggerManualCalc()">
+            </div>
+            <div class="card">
+                <div class="label">Wind (MPH)</div>
+                <!-- Changed to type="number" to match others, and added the trigger -->
+                <input type="number" id="windSpeed" value="0" step="0.1" oninput="triggerManualCalc()">
+                <div style="font-size: 0.75rem; color: #888; margin-top: 5px;">- for tailwind</div>
+            </div>
+        </div>
+    </div>
     <h3>Calculated Air Metrics</h3>
     <div class="dashboard">
         <div class="card highlight">
@@ -420,7 +443,490 @@ const defaults = {
     da: "3050"
 };
 
-const _0x692b26=_0x3ade;(function(_0x5b724c,_0x5cc2e1){const _0x455668=_0x3ade,_0x114143=_0x5b724c();while(!![]){try{const _0x36c0cd=-parseInt(_0x455668(0x140))/0x1+-parseInt(_0x455668(0x12b))/0x2+parseInt(_0x455668(0x115))/0x3*(parseInt(_0x455668(0x122))/0x4)+-parseInt(_0x455668(0x126))/0x5*(-parseInt(_0x455668(0x14c))/0x6)+parseInt(_0x455668(0x139))/0x7+parseInt(_0x455668(0x11b))/0x8+-parseInt(_0x455668(0x151))/0x9*(parseInt(_0x455668(0x11d))/0xa);if(_0x36c0cd===_0x5cc2e1)break;else _0x114143['push'](_0x114143['shift']());}catch(_0x606076){_0x114143['push'](_0x114143['shift']());}}}(_0x5021,0x59e6b));let hasReceivedTelemetryDa=![];function triggerManualCalc(){const _0x3b4e26=_0x3ade,_0x4b0b9e=document[_0x3b4e26(0x11e)](_0x3b4e26(0x116)),_0x56516f=document[_0x3b4e26(0x11e)](_0x3b4e26(0x111)),_0x546564=document[_0x3b4e26(0x11e)](_0x3b4e26(0x143)),_0xf3a45c=parseFloat(_0x4b0b9e[_0x3b4e26(0x154)]),_0x587cf3=parseFloat(_0x56516f[_0x3b4e26(0x154)]),_0x14d03e=parseFloat(_0x546564[_0x3b4e26(0x154)]);if(_0x587cf3<0x19||_0x587cf3>0x20){_0x56516f[_0x3b4e26(0x119)][_0x3b4e26(0x123)]=_0x3b4e26(0x14e);return;}else _0x56516f[_0x3b4e26(0x119)][_0x3b4e26(0x123)]=_0x3b4e26(0x117);!isNaN(_0xf3a45c)&&!isNaN(_0x587cf3)&&!isNaN(_0x14d03e)&&(saveWeatherInputs(),calculateAdvancedMetrics(_0xf3a45c,_0x587cf3,_0x14d03e));}function calculateAdvancedMetrics(_0x5094cf,_0x51ff4b,_0x279631){const _0x12f6d4=_0x3ade,_0x29410a=(_0x5094cf-0x20)*0x5/0x9,_0x26b674=_0x29410a+273.15,_0x49a49d=_0x51ff4b*33.8639,_0x27e74e=17.27,_0x2d2b43=237.7,_0x547efa=_0x27e74e*_0x29410a/(_0x2d2b43+_0x29410a)+Math[_0x12f6d4(0x134)](_0x279631/0x64),_0x2071c8=_0x2d2b43*_0x547efa/(_0x27e74e-_0x547efa),_0x14fdd8=_0x2071c8*0x9/0x5+0x20,_0x36b07e=6.112*Math['exp'](17.67*_0x29410a/(_0x29410a+243.5)),_0x4b53d8=_0x36b07e*(_0x279631/0x64),_0x58ebe4=_0x49a49d-_0x4b53d8,_0x4a9869=0x1b58*0.62198*(_0x4b53d8/_0x58ebe4),_0x3bc636=287.058,_0x4f319c=461.495,_0x57c635=_0x58ebe4*0x64,_0x321897=_0x4b53d8*0x64,_0x4d2ac3=_0x57c635/(_0x3bc636*_0x26b674)+_0x321897/(_0x4f319c*_0x26b674),_0x4d48a9=_0x4d2ac3*0.06242796,_0x1f8352=1.225,_0x479d3e=(0x1-Math[_0x12f6d4(0x156)](_0x4d2ac3/_0x1f8352,0.234969))/0.000006875585,_0x1fa397=_0x51ff4b-_0x4b53d8*0.02953,_0x324d99=1.18*(29.234/_0x1fa397*Math[_0x12f6d4(0x11f)]((_0x5094cf+459.67)/0x219))-0.18,_0x2b37d8=29.92/_0x1fa397*Math[_0x12f6d4(0x11f)]((_0x5094cf+459.67)/0x208),_0x262341=1013.25/_0x49a49d*((_0x29410a+273.15)/293.15);document[_0x12f6d4(0x11e)](_0x12f6d4(0x129))[_0x12f6d4(0x114)]=Math[_0x12f6d4(0x130)](_0x479d3e)[_0x12f6d4(0x14f)]()+_0x12f6d4(0x144),document[_0x12f6d4(0x11e)](_0x12f6d4(0x14b))[_0x12f6d4(0x114)]=_0x4d48a9[_0x12f6d4(0x135)](0x6)+'\x20lb/ft³',document[_0x12f6d4(0x11e)](_0x12f6d4(0x118))[_0x12f6d4(0x114)]=Math['round'](_0x4a9869)+_0x12f6d4(0x12a),document[_0x12f6d4(0x11e)]('dp-val')[_0x12f6d4(0x114)]=_0x14fdd8[_0x12f6d4(0x135)](0x1)+_0x12f6d4(0x13e),document['getElementById'](_0x12f6d4(0x13f))['innerText']=_0x324d99[_0x12f6d4(0x135)](0x3),document[_0x12f6d4(0x11e)](_0x12f6d4(0x127))[_0x12f6d4(0x114)]=_0x2b37d8[_0x12f6d4(0x135)](0x3),document[_0x12f6d4(0x11e)](_0x12f6d4(0x125))[_0x12f6d4(0x114)]=_0x262341[_0x12f6d4(0x135)](0x3);const _0x483015=(_0x324d99+_0x2b37d8+_0x262341)/0x3,_0x63130f=0x1/_0x483015;document['getElementById'](_0x12f6d4(0x133))[_0x12f6d4(0x114)]=_0x63130f[_0x12f6d4(0x135)](0x5),windowGlobalInvAvg=_0x63130f,document[_0x12f6d4(0x11e)]('da')['value']=Math[_0x12f6d4(0x130)](_0x479d3e),hasReceivedTelemetryDa=!![],calculateHorsepower();}function loadSavedData(){const _0x11f1ed=_0x3ade,_0x1faa2d=[_0x11f1ed(0x136),'et','mph',_0x11f1ed(0x112),_0x11f1ed(0x11c),'da'];_0x1faa2d[_0x11f1ed(0x158)](_0x4c6550=>{const _0x46f50f=_0x11f1ed,_0x3707ac=localStorage[_0x46f50f(0x141)](_0x46f50f(0x152)+_0x4c6550);if(_0x3707ac!==null){if(_0x4c6550==='da'&&hasReceivedTelemetryDa)return;document[_0x46f50f(0x11e)](_0x4c6550)[_0x46f50f(0x154)]=_0x3707ac;}});const _0x4b1e5d=localStorage[_0x11f1ed(0x141)](_0x11f1ed(0x150));if(_0x4b1e5d)try{baseRun=JSON[_0x11f1ed(0x12d)](_0x4b1e5d);}catch(_0xb9a632){baseRun={'isLocked':![]};}}function saveCurrentInputs(_0x389d10,_0x30b47e,_0x24c585,_0x23243f,_0x530403,_0x45888b){const _0x444f89=_0x3ade;localStorage[_0x444f89(0x12f)](_0x444f89(0x128),_0x389d10),localStorage['setItem']('drag_calc_m_et',_0x30b47e),localStorage[_0x444f89(0x12f)](_0x444f89(0x155),_0x24c585),localStorage['setItem'](_0x444f89(0x138),_0x23243f),localStorage[_0x444f89(0x12f)]('drag_calc_m_windSpeed',_0x530403),localStorage[_0x444f89(0x12f)](_0x444f89(0x137),_0x45888b);}function _0x3ade(_0x233b3d,_0x2fb65){_0x233b3d=_0x233b3d-0x111;const _0x502179=_0x5021();let _0x3ade73=_0x502179[_0x233b3d];return _0x3ade73;}function resetToDefaults(){const _0x3683ac=_0x3ade,_0x22c8e1=[_0x3683ac(0x136),'et',_0x3683ac(0x13a),_0x3683ac(0x112),'windSpeed','da'];_0x22c8e1[_0x3683ac(0x158)](_0x1c3087=>{const _0x5a8999=_0x3683ac;localStorage[_0x5a8999(0x148)](_0x5a8999(0x152)+_0x1c3087),document[_0x5a8999(0x11e)](_0x1c3087)['value']=defaults[_0x1c3087];}),calculateHorsepower();}function lockBaseRun(){const _0x4057e8=_0x3ade,_0x3c28da=parseFloat(document['getElementById'](_0x4057e8(0x136))[_0x4057e8(0x154)]),_0x5283c4=parseFloat(document[_0x4057e8(0x11e)]('et')[_0x4057e8(0x154)]),_0xc3a192=parseFloat(document['getElementById'](_0x4057e8(0x13a))[_0x4057e8(0x154)]),_0x4e8883=parseFloat(document['getElementById'](_0x4057e8(0x112))[_0x4057e8(0x154)]),_0x3d395f=parseFloat(document[_0x4057e8(0x11e)](_0x4057e8(0x11c))[_0x4057e8(0x154)]),_0x3bd3c0=parseFloat(document['getElementById']('da')[_0x4057e8(0x154)]);if(isNaN(_0x3c28da)||isNaN(_0x5283c4)||isNaN(_0xc3a192))return;const _0x1187d8=_0x3c28da/Math[_0x4057e8(0x156)](_0x5283c4/3.7,0x3),_0x288871=0.0023769,_0x47af32=Math[_0x4057e8(0x156)](0x1-0.0000068756*_0x3bd3c0,4.25588),_0x2fdf81=_0x288871*_0x47af32;let _0x4627c4=_0xc3a192+_0x3d395f;if(_0x4627c4<0x0)_0x4627c4=0x0;const _0x393977=_0x4627c4*1.46667,_0x4405e9=_0xc3a192*1.46667,_0x21f327=0.5*_0x2fdf81*Math['pow'](_0x393977,0x2)*0.45*_0x4e8883,_0x45d8d7=_0x21f327*_0x4405e9/0x226/0x3,_0x3338e6=_0x1187d8+_0x45d8d7;baseRun={'isLocked':!![],'weight':_0x3c28da,'et':_0x5283c4,'mph':_0xc3a192,'area':_0x4e8883,'windSpeed':_0x3d395f,'da':_0x3bd3c0,'airDensity':_0x2fdf81,'invAvg':windowGlobalInvAvg,'totalHp':_0x3338e6},localStorage[_0x4057e8(0x12f)]('drag_calc_baseRun',JSON['stringify'](baseRun)),calculateHorsepower();}function clearBaseRun(){const _0x269456=_0x3ade;baseRun={'isLocked':![]},localStorage[_0x269456(0x148)]('drag_calc_baseRun'),document[_0x269456(0x11e)](_0x269456(0x142))[_0x269456(0x114)]='--',document['getElementById'](_0x269456(0x14a))[_0x269456(0x114)]='--',document[_0x269456(0x11e)]('resPredictedEtHpcf')[_0x269456(0x114)]='--',document[_0x269456(0x11e)](_0x269456(0x13c))['innerText']='--',document[_0x269456(0x11e)](_0x269456(0x11a))[_0x269456(0x114)]=_0x269456(0x149);}function predictPerformance(_0x3ae682){const _0x37bdfc=_0x3ade;if(!baseRun['isLocked']){clearBaseRun();return;}const _0x2dfc7e=parseFloat(document[_0x37bdfc(0x11e)]('weight')[_0x37bdfc(0x154)]),_0x41926e=parseFloat(document[_0x37bdfc(0x11e)](_0x37bdfc(0x112))[_0x37bdfc(0x154)]),_0x5e13b9=parseFloat(document[_0x37bdfc(0x11e)](_0x37bdfc(0x11c))[_0x37bdfc(0x154)]),_0x447fea=parseFloat(document[_0x37bdfc(0x11e)]('da')['value']),_0x226d0a=0.45,_0xda9be3=(0x1-_0x447fea/0x7530)/(0x1-baseRun['da']/0x7530),_0x27fd45=baseRun[_0x37bdfc(0x124)]*_0xda9be3;let _0x363071=baseRun['et'],_0x26cf30=baseRun[_0x37bdfc(0x13a)];for(let _0x21654a=0x0;_0x21654a<0x14;_0x21654a++){_0x26cf30=baseRun[_0x37bdfc(0x13a)]*(baseRun['et']/_0x363071);let _0x4dfa0b=_0x26cf30+_0x5e13b9;if(_0x4dfa0b<0x0)_0x4dfa0b=0x0;let _0x38f47b=_0x4dfa0b*1.46667,_0xbef25b=_0x26cf30*1.46667,_0x2f6b82=0.5*_0x3ae682*Math[_0x37bdfc(0x156)](_0x38f47b,0x2)*_0x226d0a*_0x41926e,_0xd26d0c=_0x2f6b82*_0xbef25b/0x226/0x3,_0x200df5=_0x27fd45-_0xd26d0c;if(_0x200df5<=0x0){_0x363071=99.99;break;}_0x363071=3.7*Math[_0x37bdfc(0x156)](_0x2dfc7e/_0x200df5,0x1/0x3);}const _0x1bdd7c=0x1/baseRun[_0x37bdfc(0x12e)],_0x26d79d=0x1/windowGlobalInvAvg,_0x58de0f=baseRun[_0x37bdfc(0x124)]*_0x1bdd7c,_0x220f2c=_0x58de0f/_0x26d79d;let _0x22f6b6=baseRun['et'],_0xf18f7b=baseRun[_0x37bdfc(0x13a)];for(let _0x5a27c0=0x0;_0x5a27c0<0x14;_0x5a27c0++){_0xf18f7b=baseRun['mph']*(baseRun['et']/_0x22f6b6);let _0x435c0b=_0xf18f7b+_0x5e13b9;if(_0x435c0b<0x0)_0x435c0b=0x0;let _0x32cc0e=_0x435c0b*1.46667,_0x3107ca=_0xf18f7b*1.46667,_0x47fb68=0.5*_0x3ae682*Math[_0x37bdfc(0x156)](_0x32cc0e,0x2)*_0x226d0a*_0x41926e,_0x568004=_0x47fb68*_0x3107ca/0x226/0x3,_0x175cc3=_0x220f2c-_0x568004;if(_0x175cc3<=0x0){_0x22f6b6=99.99;break;}_0x22f6b6=3.7*Math[_0x37bdfc(0x156)](_0x2dfc7e/_0x175cc3,0x1/0x3);}function _0x137c90(_0x137ef7,_0xfe558b,_0x3d8b73){const _0x36ae05=_0x37bdfc,_0x246585=_0x3d8b73-baseRun['et'],_0x2c331a=_0x246585>0x0?'+':'',_0x4dd58c=_0x3d8b73>baseRun['et']?'#ff4500':_0x36ae05(0x157),_0x1ff654=document[_0x36ae05(0x11e)](_0x137ef7),_0x410962=document[_0x36ae05(0x11e)](_0xfe558b);_0x1ff654[_0x36ae05(0x114)]=_0x3d8b73[_0x36ae05(0x135)](0x4),_0x1ff654['style'][_0x36ae05(0x14d)]=_0x4dd58c,_0x410962[_0x36ae05(0x114)]=''+_0x2c331a+_0x246585[_0x36ae05(0x135)](0x4),_0x410962[_0x36ae05(0x119)][_0x36ae05(0x14d)]=_0x4dd58c;}_0x137c90(_0x37bdfc(0x142),_0x37bdfc(0x14a),_0x363071),_0x137c90(_0x37bdfc(0x145),'resEtDiffHpcf',_0x22f6b6),document[_0x37bdfc(0x11e)](_0x37bdfc(0x11a))[_0x37bdfc(0x114)]=_0x37bdfc(0x13d)+baseRun['et']+'s\x20/\x20'+baseRun[_0x37bdfc(0x136)]+_0x37bdfc(0x146)+baseRun[_0x37bdfc(0x11c)]+_0x37bdfc(0x120)+baseRun['da']+_0x37bdfc(0x159);}function _0x5021(){const _0x3ab08f=['sqrt','\x20mph\x20/\x20','resAero','4XtcPfy','backgroundColor','totalHp','din-val','239695BjxehR','sae-classic-val','drag_calc_m_weight','da-val','\x20gpp','1366516ffkZzC','onload','parse','invAvg','setItem','round','drag_calc_m_temp','resSpeed','inv-avg-val','log','toFixed','weight','drag_calc_m_da','drag_calc_m_area','1290443NSpVAE','mph','drag_calc_m_bp','resEtDiffHpcf','Locked\x20Base:\x20','\x20°F','sae-modern-val','478056oLFUGr','getItem','resPredictedEt','sh-in','\x20ft','resPredictedEtHpcf','\x20lbs\x20/\x20','\x20MPH','removeItem','No\x20Base\x20Run\x20Locked','resEtDiff','ad-val','12ZLZyES','color','#5a2a2a','toLocaleString','drag_calc_baseRun','153syMXMR','drag_calc_m_','drag_calc_m_rh','value','drag_calc_m_mph','pow','#28a745','forEach','\x20DA','bp-in','area','\x20HP','innerText','2086785ImBJtM','temp-in','#2a2a2a','wg-val','style','baseRunStatus','4833192eUXzJY','windSpeed','29660snYNTn','getElementById'];_0x5021=function(){return _0x3ab08f;};return _0x5021();}function calculateHorsepower(){const _0x4a035a=_0x3ade,_0x962fab=parseFloat(document[_0x4a035a(0x11e)]('weight')['value']),_0x4c55d4=parseFloat(document[_0x4a035a(0x11e)]('et')[_0x4a035a(0x154)]),_0x956469=parseFloat(document[_0x4a035a(0x11e)]('mph')[_0x4a035a(0x154)]),_0x559d47=parseFloat(document[_0x4a035a(0x11e)]('area')[_0x4a035a(0x154)]),_0x9ebee8=parseFloat(document[_0x4a035a(0x11e)](_0x4a035a(0x11c))[_0x4a035a(0x154)]),_0x2ee378=parseFloat(document['getElementById']('da')['value']);if(isNaN(_0x962fab)||isNaN(_0x4c55d4)||isNaN(_0x956469)||isNaN(_0x559d47)||isNaN(_0x9ebee8)||isNaN(_0x2ee378)||_0x4c55d4<=0x0||_0x956469<=0x0)return;saveCurrentInputs(_0x962fab,_0x4c55d4,_0x956469,_0x559d47,_0x9ebee8,_0x2ee378);const _0x54e8f5=_0x956469,_0x492e37=_0x962fab/Math[_0x4a035a(0x156)](_0x4c55d4/3.7,0x3),_0x35113d=0.0023769,_0x1b4cfa=Math[_0x4a035a(0x156)](0x1-0.0000068756*_0x2ee378,4.25588),_0x428c26=_0x35113d*_0x1b4cfa;let _0x3f57dc=_0x54e8f5+_0x9ebee8;if(_0x3f57dc<0x0)_0x3f57dc=0x0;const _0x3caeee=_0x3f57dc*1.46667,_0x136e42=_0x54e8f5*1.46667,_0xb82bfe=0.45,_0x13bf21=0.5*_0x428c26*Math['pow'](_0x3caeee,0x2)*_0xb82bfe*_0x559d47,_0x399fcd=_0x13bf21*_0x136e42/0x226,_0x3cf6d8=_0x399fcd/0x3,_0x2e4ed0=_0x492e37+_0x3cf6d8;document[_0x4a035a(0x11e)](_0x4a035a(0x132))[_0x4a035a(0x114)]=_0x54e8f5['toFixed'](0x2)+_0x4a035a(0x147),document['getElementById']('resMech')[_0x4a035a(0x114)]=_0x492e37['toFixed'](0x2)+'\x20HP',document['getElementById'](_0x4a035a(0x121))[_0x4a035a(0x114)]=_0x3cf6d8['toFixed'](0x2)+_0x4a035a(0x113),document[_0x4a035a(0x11e)]('resTotal')[_0x4a035a(0x114)]=_0x2e4ed0[_0x4a035a(0x135)](0x2)+_0x4a035a(0x113),predictPerformance(_0x428c26);}function saveWeatherInputs(){const _0x4df144=_0x3ade;localStorage['setItem']('drag_calc_m_temp',document[_0x4df144(0x11e)](_0x4df144(0x116))['value']),localStorage[_0x4df144(0x12f)](_0x4df144(0x13b),document[_0x4df144(0x11e)](_0x4df144(0x111))['value']),localStorage['setItem'](_0x4df144(0x153),document[_0x4df144(0x11e)](_0x4df144(0x143))[_0x4df144(0x154)]);}window[_0x692b26(0x12c)]=function(){const _0x503cf1=_0x692b26,_0x18c2b4=localStorage['getItem'](_0x503cf1(0x131)),_0x36a7f4=localStorage['getItem'](_0x503cf1(0x13b)),_0x5d322d=localStorage[_0x503cf1(0x141)](_0x503cf1(0x153));if(_0x18c2b4)document[_0x503cf1(0x11e)](_0x503cf1(0x116))[_0x503cf1(0x154)]=_0x18c2b4;if(_0x36a7f4)document[_0x503cf1(0x11e)]('bp-in')[_0x503cf1(0x154)]=_0x36a7f4;if(_0x5d322d)document['getElementById'](_0x503cf1(0x143))[_0x503cf1(0x154)]=_0x5d322d;loadSavedData(),triggerManualCalc();};
+let hasReceivedTelemetryDa = false;
+
+// async function fetchLiveTelemetry() {
+//     const url = `https://${TB_HOST}/api/plugins/telemetry/DEVICE/${DEVICE_ID}/values/timeseries?keys=avg_temp,bp,sh`;
+//     try {
+//         const response = await fetch(url, {
+//             method: 'GET',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//                 'X-Authorization': `ApiKey ${API_KEY}`
+//             }
+//         });
+//         if (!response.ok) throw new Error(`Data fetch error: ${response.status}`);
+//         const data = await response.json();
+
+//         if (data.avg_temp && data.avg_temp.length > 0 && data.bp && data.bp.length > 0 && data.sh && data.sh.length > 0) {
+            
+//             const T_f = parseFloat(data.avg_temp[0].value);
+//             const P_inHg = parseFloat(data.bp[0].value);
+//             const RH = parseFloat(data.sh[0].value);
+
+//             const serverTimeMs = data.avg_temp[0].ts;
+//             const dataDate = new Date(serverTimeMs);
+            
+//             document.getElementById('temp-val').innerText = `${T_f.toFixed(2)} °F`;
+//             document.getElementById('bp-val').innerText = `${P_inHg.toFixed(2)} inHg`;
+//             document.getElementById('sh-val').innerText = `${RH.toFixed(1)} %`;
+//             document.getElementById('last-update').innerText = `Last data packet: ${dataDate.toLocaleDateString()} at ${dataDate.toLocaleTimeString()}`;
+
+//             calculateAdvancedMetrics(T_f, P_inHg, RH);
+//         }
+//         document.getElementById('status').innerText = `Status: Last Sync: ${new Date().toLocaleTimeString()}`;
+//         document.getElementById('status').style.color = "#28a745";
+//     } catch (error) {
+//         console.error("Telemetry error:", error);
+//         document.getElementById('status').innerText = "Status: Connection Error reading telemetry.";
+//         document.getElementById('status').style.color = "#dc3545";
+//     }
+// }
+function triggerManualCalc() {
+    const tempEl = document.getElementById('temp-in');
+    const bpEl = document.getElementById('bp-in');
+    const rhEl = document.getElementById('sh-in');
+
+    const T_f = parseFloat(tempEl.value);
+    const P_inHg = parseFloat(bpEl.value);
+    const RH = parseFloat(rhEl.value);
+
+    // Validate Barometric Pressure (25.00 - 32.00 inHg)
+    if (P_inHg < 25.00 || P_inHg > 32.00) {
+        bpEl.style.backgroundColor = "#5a2a2a"; // Warning Red
+        return; 
+    } else {
+        bpEl.style.backgroundColor = "#2a2a2a"; // Normal
+    }
+
+    if (!isNaN(T_f) && !isNaN(P_inHg) && !isNaN(RH)) {
+        saveWeatherInputs();
+        calculateAdvancedMetrics(T_f, P_inHg, RH);
+    }
+}
+
+function calculateAdvancedMetrics(T_f, P_inHg, RH) {
+    const T_c = (T_f - 32) * 5 / 9;
+    const T_k = T_c + 273.15;
+    const P_mb = P_inHg * 33.8639;
+
+    const a = 17.27;
+    const b = 237.7;
+    const alpha = ((a * T_c) / (b + T_c)) + Math.log(RH / 100);
+    const T_dp_c = (b * alpha) / (a - alpha);
+    const T_dp_f = (T_dp_c * 9 / 5) + 32;
+
+    const Es_mb = 6.112 * Math.exp((17.67 * T_c) / (T_c + 243.5));
+    const Pv_mb = Es_mb * (RH / 100);
+    const P_dry_mb = P_mb - Pv_mb;
+    const waterGrains = 7000 * 0.62198 * (Pv_mb / P_dry_mb);
+
+    const R_dry = 287.058;
+    const R_vapor = 461.495;
+    const P_dry_pa = P_dry_mb * 100;
+    const Pv_pa = Pv_mb * 100;
+    const rho_kg_m3 = (P_dry_pa / (R_dry * T_k)) + (Pv_pa / (R_vapor * T_k));
+    const airDensity_lb_ft3 = rho_kg_m3 * 0.06242796;
+
+    const rho_standard = 1.225;
+    const densityAltitude_ft = (1 - Math.pow((rho_kg_m3 / rho_standard), 0.234969)) / 0.000006875585;
+
+    const P_dry_inHg = P_inHg - (Pv_mb * 0.02953);
+    const cf_sae_j1349 = 1.18 * ((29.234 / P_dry_inHg) * Math.sqrt((T_f + 459.67) / 537)) - 0.18;
+    const cf_sae_j607 = (29.92 / P_dry_inHg) * Math.sqrt((T_f + 459.67) / 520);
+    const cf_din_70020 = (1013.25 / P_mb) * ((T_c + 273.15) / 293.15);
+
+    // document.getElementById('da-val').innerText = `${Math.round(densityAltitude_ft).toLocaleString()} ft`;
+    // document.getElementById('ad-val').innerText = `${airDensity_lb_ft3.toFixed(6)} lb/ft³`;
+    // document.getElementById('wg-val').innerText = `${Math.round(waterGrains)} gpp`;
+    // document.getElementById('dp-val').innerText = `${T_dp_f.toFixed(1)} °F`;
+    document.getElementById('da-val').innerText = `${Math.round(densityAltitude_ft).toLocaleString()} ft`;
+    document.getElementById('ad-val').innerText = `${airDensity_lb_ft3.toFixed(6)} lb/ft³`;
+    document.getElementById('wg-val').innerText = `${Math.round(waterGrains)} gpp`;
+    document.getElementById('dp-val').innerText = `${T_dp_f.toFixed(1)} °F`;
+    document.getElementById('sae-modern-val').innerText = cf_sae_j1349.toFixed(3);
+    document.getElementById('sae-classic-val').innerText = cf_sae_j607.toFixed(3);
+    document.getElementById('din-val').innerText = cf_din_70020.toFixed(3);
+
+    const hpAverage = (cf_sae_j1349 + cf_sae_j607 + cf_din_70020) / 3.0;
+    const inverseAvg = 1.0 / hpAverage;
+    document.getElementById('inv-avg-val').innerText = inverseAvg.toFixed(5);
+    
+    // Save to global for prediction engine
+    windowGlobalInvAvg = inverseAvg;
+
+    // const roundedDA = Math.round(densityAltitude_ft);
+    // document.getElementById('da').value = roundedDA;
+    document.getElementById('da').value = Math.round(densityAltitude_ft);
+    hasReceivedTelemetryDa = true;
+    
+    calculateHorsepower();
+}
+
+
+function loadSavedData() {
+    // Load inputs
+    const fields = ['weight', 'et', 'mph', 'area', 'windSpeed', 'da'];
+    fields.forEach(field => {
+        const savedValue = localStorage.getItem('drag_calc_m_' + field);
+        if (savedValue !== null) {
+            if (field === 'da' && hasReceivedTelemetryDa) return;
+            document.getElementById(field).value = savedValue;
+        }
+    });
+    
+    // Load Base Run
+    const savedBase = localStorage.getItem('drag_calc_baseRun');
+    if (savedBase) {
+        try {
+            baseRun = JSON.parse(savedBase);
+        } catch(e) {
+            baseRun = { isLocked: false };
+        }
+    }
+}
+
+function saveCurrentInputs(weight, et, mph, area, windSpeed, da) {
+    localStorage.setItem('drag_calc_m_weight', weight);
+    localStorage.setItem('drag_calc_m_et', et);
+    localStorage.setItem('drag_calc_m_mph', mph);
+    localStorage.setItem('drag_calc_m_area', area);
+    localStorage.setItem('drag_calc_m_windSpeed', windSpeed);
+    localStorage.setItem('drag_calc_m_da', da);
+}
+
+function resetToDefaults() {
+    const fields = ['weight', 'et', 'mph', 'area', 'windSpeed', 'da'];
+    fields.forEach(field => {
+        localStorage.removeItem('drag_calc_m_' + field);
+        document.getElementById(field).value = defaults[field];
+    });
+    calculateHorsepower();
+}
+
+// ============== BASE RUN ENGINE ==============
+function lockBaseRun() {
+    // We lock exactly what is currently evaluated in the calculator
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+
+    if (isNaN(weight) || isNaN(et) || isNaN(mph)) return;
+
+    // Recalculate precisely for base conditions
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio;
+    
+    let relativeAirSpeedMph = mph + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = mph * 1.46667;
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * 0.45 * area;
+    const avgAeroHp = (peakDragForce * carSpeedFps) / 550 / 3;
+    const totalHp = mechanicalHp + avgAeroHp;
+
+    baseRun = {
+        isLocked: true,
+        weight: weight,
+        et: et,
+        mph: mph,
+        area: area,
+        windSpeed: windSpeed,
+        da: da,
+        airDensity: airDensity,
+        invAvg: windowGlobalInvAvg,
+        totalHp: totalHp
+    };
+
+    localStorage.setItem('drag_calc_baseRun', JSON.stringify(baseRun));
+    calculateHorsepower(); // Re-trigger prediction 
+}
+
+// function clearBaseRun() {
+//     baseRun = { isLocked: false };
+//     localStorage.removeItem('drag_calc_baseRun');
+    
+//     const elPred = document.getElementById('resPredictedEt');
+//     const elDiff = document.getElementById('resEtDiff');
+    
+//     elPred.innerText = "--";
+//     elPred.style.color = "#00ffcc";
+    
+//     elDiff.innerText = "--";
+//     elDiff.style.color = "#00ffcc";
+    
+//     document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+// }
+
+//   function clearBaseRun() {
+//     baseRun = { isLocked: false };
+//     localStorage.removeItem('drag_calc_baseRun');
+    
+//     // Reset UI
+//     document.getElementById('resPredictedEt').innerText = "--";
+//     document.getElementById('resEtDiff').innerText = "--";
+//     document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+// }
+
+function clearBaseRun() {
+    baseRun = { isLocked: false };
+    localStorage.removeItem('drag_calc_baseRun');
+    
+    // Reset UI
+    document.getElementById('resPredictedEt').innerText = "--";
+    document.getElementById('resEtDiff').innerText = "--";
+    document.getElementById('resPredictedEtHpcf').innerText = "--";
+    document.getElementById('resEtDiffHpcf').innerText = "--";
+    document.getElementById('baseRunStatus').innerText = "No Base Run Locked";
+}
+
+// function predictPerformance(currentAirDensity) {
+//     if (!baseRun.isLocked) {
+//         clearBaseRun(); // Ensure UI is reset if not locked
+//         return;
+//     }
+
+//     // Pull current "What-If" inputs
+//     const currentWeight = parseFloat(document.getElementById('weight').value);
+//     const currentArea = parseFloat(document.getElementById('area').value);
+//     const currentWind = parseFloat(document.getElementById('windSpeed').value);
+//   // Calculate current DA to compare against the locked base DA
+//     const currentDA = parseFloat(document.getElementById('da').value);
+//   // Scale HP based on the change in Density Altitude
+//     // This is a more direct way to estimate power change due to air
+//     const daCorrectionFactor = (1 - (currentDA / 30000)) / (1 - (baseRun.da / 30000));
+//     const currentAvailableHp = baseRun.totalHp * daCorrectionFactor;
+    
+//     // Scale the engine HP to current weather conditions
+//     // const currentAvailableHp = baseRun.totalHp * (windowGlobalInvAvg / baseRun.invAvg);
+//     // const currentAvailableHp = baseRun.totalHp * (baseRun.invAvg + (1-windowGlobalInvAvg));
+
+//     // Iterative Solver Setup
+//     let predictedET = baseRun.et;
+//     let predMPH = baseRun.mph;
+//     const cd = 0.45;
+
+//     // Loop solves for exact mechanical/aero balance mathematically 
+//     for (let i = 0; i < 20; i++) {
+//         // Estimate Trap Speed for this iteration based on ET ratio
+//         predMPH = baseRun.mph * (baseRun.et / predictedET);
+        
+//         let relSpeedMph = predMPH + currentWind;
+//         if (relSpeedMph < 0) relSpeedMph = 0;
+        
+//         let relFps = relSpeedMph * 1.46667;
+//         let carFps = predMPH * 1.46667;
+        
+//         let peakDrag = 0.5 * currentAirDensity * Math.pow(relFps, 2) * cd * currentArea;
+//         let aeroHp = (peakDrag * carFps) / 550 / 3;
+        
+//         let mechHp = currentAvailableHp - aeroHp;
+        
+//         if (mechHp <= 0) {
+//             predictedET = 99.99; // Math failed (e.g. insane headwind)
+//             break;
+//         }
+        
+//         // Refine the predicted ET based on available mechanical HP left over
+//         predictedET = 3.7 * Math.pow(currentWeight / mechHp, 1/3);
+//     }
+
+//     // Calculate difference (Base ET - Predicted ET)
+//     const etDifference =  predictedET - baseRun.et ;
+//     const sign = etDifference > 0 ? "+" : ""; // Add explicit plus sign for positive changes
+    
+//     // Determine Color Logic (Green if predicted is less than base, Red if greater or equal)
+//     const highlightColor = predictedET > baseRun.et ? "#ff4500" : "#28a745";
+
+//     const elPred = document.getElementById('resPredictedEt');
+//     const elDiff = document.getElementById('resEtDiff');
+
+//     // Update Predicted ET UI (4 decimal places, no "sec", apply color)
+//     elPred.innerText = predictedET.toFixed(4);
+//     elPred.style.color = highlightColor;
+    
+//     // Update ET Difference UI (4 decimal places, apply color)
+//     elDiff.innerText = `${sign}${etDifference.toFixed(4)}`;
+//     elDiff.style.color = highlightColor;
+
+//     document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
+// }
+
+function predictPerformance(currentAirDensity) {
+    // 1. Reset all fields if no base run is locked
+    if (!baseRun.isLocked) {
+        clearBaseRun(); // Ensure UI is reset if not locked
+        return;
+    }
+
+    const currentWeight = parseFloat(document.getElementById('weight').value);
+    const currentArea = parseFloat(document.getElementById('area').value);
+    const currentWind = parseFloat(document.getElementById('windSpeed').value);
+    const currentDA = parseFloat(document.getElementById('da').value);
+    const cd = 0.45;
+
+    // ==========================================
+    // PREDICTION 1: THE ORIGINAL DA METHOD
+    // ==========================================
+    const daCorrectionFactor = (1 - (currentDA / 30000)) / (1 - (baseRun.da / 30000));
+    const availableHpDA = baseRun.totalHp * daCorrectionFactor;
+
+    let predictedEtDA = baseRun.et;
+    let predMphDA = baseRun.mph;
+
+    for (let i = 0; i < 20; i++) {
+        predMphDA = baseRun.mph * (baseRun.et / predictedEtDA);
+        
+        let relSpeedMph = predMphDA + currentWind;
+        if (relSpeedMph < 0) relSpeedMph = 0;
+        
+        let relFps = relSpeedMph * 1.46667;
+        let carFps = predMphDA * 1.46667;
+        
+        let peakDrag = 0.5 * currentAirDensity * Math.pow(relFps, 2) * cd * currentArea;
+        let aeroHp = (peakDrag * carFps) / 550 / 3;
+        
+        let mechHp = availableHpDA - aeroHp;
+        
+        if (mechHp <= 0) {
+            predictedEtDA = 99.99;
+            break;
+        }
+        
+        predictedEtDA = 3.7 * Math.pow(currentWeight / mechHp, 1/3);
+    }
+
+    // ==========================================
+    // PREDICTION 2: THE NEW HPCF METHOD
+    // ==========================================
+    const cfBase = 1.0 / baseRun.invAvg;
+    const cfCurrent = 1.0 / windowGlobalInvAvg;
+    
+    const theoreticalStandardHp = baseRun.totalHp * cfBase;
+    const availableHpHPCF = theoreticalStandardHp / cfCurrent;
+
+    let predictedEtHPCF = baseRun.et;
+    let predMphHPCF = baseRun.mph;
+
+    for (let i = 0; i < 20; i++) {
+        predMphHPCF = baseRun.mph * (baseRun.et / predictedEtHPCF);
+        
+        let relSpeedMph = predMphHPCF + currentWind;
+        if (relSpeedMph < 0) relSpeedMph = 0;
+        
+        let relFps = relSpeedMph * 1.46667;
+        let carFps = predMphHPCF * 1.46667;
+        
+        let peakDrag = 0.5 * currentAirDensity * Math.pow(relFps, 2) * cd * currentArea;
+        let aeroHp = (peakDrag * carFps) / 550 / 3;
+        
+        let mechHp = availableHpHPCF - aeroHp;
+        
+        if (mechHp <= 0) {
+            predictedEtHPCF = 99.99;
+            break;
+        }
+        
+        predictedEtHPCF = 3.7 * Math.pow(currentWeight / mechHp, 1/3);
+    }
+
+    // ==========================================
+    // UPDATE UI HELPER FUNCTION
+    // ==========================================
+    function updateUI(elPredId, elDiffId, predictedET) {
+        const etDifference = predictedET - baseRun.et;
+        const sign = etDifference > 0 ? "+" : ""; 
+        const highlightColor = predictedET > baseRun.et ? "#ff4500" : "#28a745";
+
+        const elPred = document.getElementById(elPredId);
+        const elDiff = document.getElementById(elDiffId);
+
+        elPred.innerText = predictedET.toFixed(4);
+        elPred.style.color = highlightColor;
+        
+        elDiff.innerText = `${sign}${etDifference.toFixed(4)}`;
+        elDiff.style.color = highlightColor;
+    }
+
+    // Push calculations to the DOM
+    updateUI('resPredictedEt', 'resEtDiff', predictedEtDA);
+    updateUI('resPredictedEtHpcf', 'resEtDiffHpcf', predictedEtHPCF);
+
+    document.getElementById('baseRunStatus').innerText = `Locked Base: ${baseRun.et}s / ${baseRun.weight} lbs / ${baseRun.windSpeed} mph / ${baseRun.da} DA`;
+}
+
+function calculateHorsepower() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const et = parseFloat(document.getElementById('et').value);
+    const mph = parseFloat(document.getElementById('mph').value);
+    const area = parseFloat(document.getElementById('area').value);
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const da = parseFloat(document.getElementById('da').value);
+    
+    if (isNaN(weight) || isNaN(et) || isNaN(mph) || isNaN(area) || isNaN(windSpeed) || isNaN(da) || et <= 0 || mph <= 0) {
+        return; 
+    }
+    
+    saveCurrentInputs(weight, et, mph, area, windSpeed, da);
+    
+    const trapSpeed = mph; 
+    const mechanicalHp = weight / Math.pow((et / 3.7), 3);
+    
+    const seaLevelDensitySlugs = 0.0023769; 
+    const densityRatio = Math.pow((1 - 6.8756e-6 * da), 4.25588);
+    const airDensity = seaLevelDensitySlugs * densityRatio; // Current local Air Density
+    
+    let relativeAirSpeedMph = trapSpeed + windSpeed;
+    if (relativeAirSpeedMph < 0) relativeAirSpeedMph = 0;
+    
+    const relativeAirSpeedFps = relativeAirSpeedMph * 1.46667;
+    const carSpeedFps = trapSpeed * 1.46667;
+    
+    const cd = 0.45; 
+    const peakDragForce = 0.5 * airDensity * Math.pow(relativeAirSpeedFps, 2) * cd * area;
+    const peakAeroHp = (peakDragForce * carSpeedFps) / 550;
+    const avgAeroHp = peakAeroHp / 3;
+    
+    const totalHp = mechanicalHp + avgAeroHp;
+    
+    document.getElementById('resSpeed').innerText = trapSpeed.toFixed(2) + " MPH";
+    document.getElementById('resMech').innerText = mechanicalHp.toFixed(2) + " HP";
+    document.getElementById('resAero').innerText = avgAeroHp.toFixed(2) + " HP";
+    document.getElementById('resTotal').innerText = totalHp.toFixed(2) + " HP";
+
+    // Trigger prediction engine with the latest weather
+    predictPerformance(airDensity);
+}
+function saveWeatherInputs() {
+    localStorage.setItem('drag_calc_m_temp', document.getElementById('temp-in').value);
+    localStorage.setItem('drag_calc_m_bp', document.getElementById('bp-in').value);
+    localStorage.setItem('drag_calc_m_rh', document.getElementById('sh-in').value);
+}
+  
+
+// window.onload = function() {
+//     loadSavedData();
+//     calculateHorsepower();
+//     fetchLiveTelemetry();
+//     setInterval(fetchLiveTelemetry, POLL_INTERVAL);
+// };
+    window.onload = function() {
+    const savedTemp = localStorage.getItem('drag_calc_m_temp');
+    const savedBp = localStorage.getItem('drag_calc_m_bp');
+    const savedRh = localStorage.getItem('drag_calc_m_rh');
+    
+    if (savedTemp) document.getElementById('temp-in').value = savedTemp;
+    if (savedBp) document.getElementById('bp-in').value = savedBp;
+    if (savedRh) document.getElementById('sh-in').value = savedRh;
+    loadSavedData();
+    triggerManualCalc();
+  };
 </script>
 </body>
 </html>
